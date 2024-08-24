@@ -28,7 +28,7 @@ ChatUI::ChatHandler* chatHandler = nullptr;
 void CreateChatGameObject() {
     if(chatHandler) 
         return;
-    UnityEngine::GameObject* chatGameObject = BSML::CreateCanvas();
+    UnityEngine::GameObject* chatGameObject = BSML::Lite::CreateCanvas();
     Object::DestroyImmediate(chatGameObject->GetComponent<VRUIControls::VRGraphicRaycaster*>());
     Object::DontDestroyOnLoad(chatGameObject);
     
@@ -37,7 +37,7 @@ void CreateChatGameObject() {
     chatGameObject->AddComponent<Backgroundable*>()->ApplyBackgroundWithAlpha("round-rect-panel", 0.75f);
     RectTransform* transform = chatGameObject->GetComponent<RectTransform*>();
 
-    VerticalLayoutGroup* layout = BSML::CreateVerticalLayoutGroup(transform);
+    VerticalLayoutGroup* layout = BSML::Lite::CreateVerticalLayoutGroup(transform);
     ContentSizeFitter* contentSizeFitter = layout->GetComponent<ContentSizeFitter*>();
     contentSizeFitter->set_horizontalFit(ContentSizeFitter::FitMode::Unconstrained);
     contentSizeFitter->set_verticalFit(ContentSizeFitter::FitMode::PreferredSize);

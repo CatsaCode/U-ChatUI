@@ -16,10 +16,10 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     if(firstActivation) {
         self->get_gameObject()->AddComponent<Touchable*>();
 
-        GameObject* container = BeatSaberUI::CreateScrollableSettingsContainer(self->get_transform());
+        GameObject* container = BSML::Lite::CreateScrollableSettingsContainer(self->get_transform());
         Transform* parent = container->get_transform();
 
-        auto layout = BeatSaberUI::CreateHorizontalLayoutGroup(parent);
+        auto layout = BSML::Lite::CreateHorizontalLayoutGroup(parent);
         layout->GetComponent<LayoutElement*>()->set_preferredWidth(90.0f);
         layout->set_childControlWidth(true);
         auto layoutParent = layout->get_transform();
@@ -27,11 +27,11 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
         auto stringSetting = AddConfigValueInputString(layoutParent, getModConfig().Channel);
 
         //Use underline from button because text doesn't work somehow with this width
-        auto underscoreButton = BSML::CreateUIButton(layoutParent, "", UnityEngine::Vector2(0.0f, 0.0f), UnityEngine::Vector2(4.0f, 8.0f), [stringSetting] {
+        auto underscoreButton = BSML::Lite::CreateUIButton(layoutParent, "", UnityEngine::Vector2(0.0f, 0.0f), UnityEngine::Vector2(4.0f, 8.0f), [stringSetting] {
             stringSetting->KeyboardKeyPressed('_');
             stringSetting->UpdateClearButton();
         });
-        BSML::AddHoverHint(underscoreButton->get_gameObject(), "Adds a underscore");
+        BSML::Lite::AddHoverHint(underscoreButton->get_gameObject(), "Adds a underscore");
         LayoutElement* layoutElement = underscoreButton->GetComponent<LayoutElement*>();
         layoutElement->set_minWidth(4.0f);
 
