@@ -24,7 +24,7 @@
 #include <sstream>
 #include <chrono>
 
-ModInfo modInfo;
+CModInfo modInfo;
 
 Logger& getLogger() {
     static auto logger = new Logger(modInfo, LoggerOptions(false, true));
