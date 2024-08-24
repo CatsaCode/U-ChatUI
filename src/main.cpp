@@ -24,12 +24,7 @@
 #include <sstream>
 #include <chrono>
 
-CModInfo modInfo;
 
-Logger& getLogger() {
-    static auto logger = new Logger(modInfo, LoggerOptions(false, true));
-    return *logger;
-}
 
 //TODO: Add to ModConfig
 std::unordered_set<std::string> Blacklist;
@@ -57,10 +52,10 @@ void OnChatMessage(IRCMessage ircMessage, TwitchIRCClient* client) {
     std::string username = ircMessage.prefix.nick;
     std::string message = ircMessage.parameters.at(ircMessage.parameters.size() - 1);
     if (Blacklist.count(username)) {
-        getLogger().info("Twitch Chat: Blacklisted user %s sent the message: %s", username.c_str(), message.c_str());
+        //getLogger().info("Twitch Chat: Blacklisted user %s sent the message: %s", username.c_str(), message.c_str());
         return;
     } else {
-        getLogger().info("Twitch Chat: User %s sent the message: %s", username.c_str(), message.c_str());
+        //getLogger().info("Twitch Chat: User %s sent the message: %s", username.c_str(), message.c_str());
     }
     if (usersColorCache.find(username) == usersColorCache.end())
         usersColorCache.emplace(username, int_to_hex(rand() % 0x1000000, 6));
@@ -76,7 +71,7 @@ void TwitchIRCThread() {
     if(threadRunning) 
         return;
     threadRunning = true;
-    getLogger().info("Thread Started!");
+    //getLogger().info("Thread Started!");
     TwitchIRCClient client = TwitchIRCClient();
     std::string currentChannel = "";
     using namespace std::chrono;
@@ -92,7 +87,7 @@ void TwitchIRCThread() {
                     lastJoinTry = currentTime; 
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
-                        getLogger().info("Twitch Chat: Joined Channel %s!", currentChannel.c_str());
+                        //getLogger().info("Twitch Chat: Joined Channel %s!", currentChannel.c_str());
                         AddChatObject("<color=#FFFFFFFF>Joined Channel:</color> <color=#FFB300FF>" + currentChannel + "</color>");
                     }
                 }
@@ -101,18 +96,18 @@ void TwitchIRCThread() {
         } else {
             if(wasConnected) {
                 wasConnected = false;
-                getLogger().info("Twitch Chat: Disconnected!");
+                //getLogger().info("Twitch Chat: Disconnected!");
                 AddChatObject("<color=#FF0000FF>Disconnected!</color>");
             }
             if ((currentTime - lastConnectTry).count() > CONNECT_RETRY_DELAY) {
-                getLogger().info("Twitch Chat: Connecting...");
+                //getLogger().info("Twitch Chat: Connecting...");
                 lastConnectTry = currentTime;
                 if (client.InitSocket()) {
                     if (client.Connect()) {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
                             AddChatObject("<color=#FFFFFFFF>Logged In!</color>");
-                            getLogger().info("Twitch Chat: Logged In!");
+                            //getLogger().info("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";
                         }
@@ -151,28 +146,36 @@ MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
     }
 }
 
-extern "C" void setup(ModInfo& info) {
-    modInfo.id = "ChatUI";
-    modInfo.version = VERSION;
-    info = modInfo;
 
-    Blacklist.insert("dootybot");
+#pragma region Mod setup
+/// @brief Called at the early stages of game loading
+/// @param info
+/// @return
+MOD_EXPORT_FUNC void setup(CModInfo& info) {
+    info.id = MOD_ID;
+    info.version = VERSION;
+
+    Blacklist.insert("streamelements");
     Blacklist.insert("nightbot");
 
+    modInfo.assign(info);
     getModConfig().Init(modInfo);
+    Logger.info("Completed setup!");
 }
 
-extern "C" void load() {
-    getLogger().info("Starting ChatUI installation...");
+/// @brief Called later on in the game loading - a good time to install function hooks
+/// @return
+MOD_EXPORT_FUNC void late_load() {
     il2cpp_functions::Init();
-
+    getModConfig().Init(modInfo);
     BSML::Init();
 
+    BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
+    Logger.info("Installing hooks (and custom-types init)...");
     custom_types::Register::AutoRegister();
 
-    BSML::Register::RegisterModSettingsViewController(modInfo, DidActivate);
+    INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
 
-    INSTALL_HOOK(getLogger(), SceneManager_Internal_ActiveSceneChanged);
-    
-    getLogger().info("Successfully installed ChatUI!");
+    Logger.info("Installed all hooks!");
 }
+#pragma endregion
