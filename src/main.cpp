@@ -119,12 +119,12 @@ void TwitchIRCThread() {
     }
     if(wasConnected) {
         wasConnected = false;
-        getLogger().info("Twitch Chat: Disconnected!");
+        //getLogger().info("Twitch Chat: Disconnected!");
         AddChatObject("<color=#FF0000FF>Disconnected!</color>");
     }
     threadRunning = false;
     client.Disconnect();
-    getLogger().info("Thread Stopped!");
+    //getLogger().info("Thread Stopped!");
 }
 
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
