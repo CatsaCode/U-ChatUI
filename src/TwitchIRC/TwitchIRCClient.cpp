@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include <algorithm>
-#include "TwitchIRCClient.hpp"
+#include "TwitchIRC/TwitchIRCClient.hpp"
 
 std::vector<std::string> split(std::string const& text, char sep)
 {

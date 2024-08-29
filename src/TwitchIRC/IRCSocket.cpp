@@ -15,7 +15,7 @@
 
 #include <cstring>
 #include <fcntl.h>
-#include "IRCSocket.hpp"
+#include "TwitchIRC/IRCSocket.hpp"
 
 #define MAXDATASIZE 4096
 

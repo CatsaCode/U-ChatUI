@@ -4,6 +4,8 @@
 #include "custom-types/shared/register.hpp"
 
 #include "TwitchIRC/TwitchIRCClient.hpp"
+#include "TwitchIRC/IRCSocket.hpp"
+#include "bsml/shared/BSML/MainThreadScheduler.hpp"
 
 #include "HMUI/ViewController.hpp"
 #include "HMUI/Touchable.hpp"
@@ -14,7 +16,7 @@
 
 #include "CustomTypes/ChatHandler.hpp"
 #include "ChatBuilder.hpp"
-#include "customlogger.hpp"
+#include "logging.hpp"
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
@@ -24,7 +26,7 @@
 #include <sstream>
 #include <chrono>
 
-
+modloader::ModInfo modInfo{MOD_ID, VERSION, 0};
 
 //TODO: Add to ModConfig
 std::unordered_set<std::string> Blacklist;
@@ -52,10 +54,10 @@ void OnChatMessage(IRCMessage ircMessage, TwitchIRCClient* client) {
     std::string username = ircMessage.prefix.nick;
     std::string message = ircMessage.parameters.at(ircMessage.parameters.size() - 1);
     if (Blacklist.count(username)) {
-        //getLogger().info("Twitch Chat: Blacklisted user %s sent the message: %s", username.c_str(), message.c_str());
+        INFO("Twitch Chat: Blacklisted user %s sent the message: %s", username.c_str(), message.c_str());
         return;
     } else {
-        //getLogger().info("Twitch Chat: User %s sent the message: %s", username.c_str(), message.c_str());
+        INFO("Twitch Chat: User %s sent the message: %s", username.c_str(), message.c_str());
     }
     if (usersColorCache.find(username) == usersColorCache.end())
         usersColorCache.emplace(username, int_to_hex(rand() % 0x1000000, 6));
@@ -71,7 +73,7 @@ void TwitchIRCThread() {
     if(threadRunning) 
         return;
     threadRunning = true;
-    //getLogger().info("Thread Started!");
+    INFO("Thread Started!");
     TwitchIRCClient client = TwitchIRCClient();
     std::string currentChannel = "";
     using namespace std::chrono;
@@ -87,7 +89,7 @@ void TwitchIRCThread() {
                     lastJoinTry = currentTime; 
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
-                        //getLogger().info("Twitch Chat: Joined Channel %s!", currentChannel.c_str());
+                        INFO("Twitch Chat: Joined Channel {}!", currentChannel);
                         AddChatObject("<color=#FFFFFFFF>Joined Channel:</color> <color=#FFB300FF>" + currentChannel + "</color>");
                     }
                 }
@@ -96,18 +98,18 @@ void TwitchIRCThread() {
         } else {
             if(wasConnected) {
                 wasConnected = false;
-                //getLogger().info("Twitch Chat: Disconnected!");
+                INFO("Twitch Chat: Disconnected!");
                 AddChatObject("<color=#FF0000FF>Disconnected!</color>");
             }
             if ((currentTime - lastConnectTry).count() > CONNECT_RETRY_DELAY) {
-                //getLogger().info("Twitch Chat: Connecting...");
+                INFO("Twitch Chat: Connecting...");
                 lastConnectTry = currentTime;
                 if (client.InitSocket()) {
                     if (client.Connect()) {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
                             AddChatObject("<color=#FFFFFFFF>Logged In!</color>");
-                            //getLogger().info("Twitch Chat: Logged In!");
+                            INFO("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";
                         }
@@ -119,12 +121,12 @@ void TwitchIRCThread() {
     }
     if(wasConnected) {
         wasConnected = false;
-        //getLogger().info("Twitch Chat: Disconnected!");
+        INFO("Twitch Chat: Disconnected!");
         AddChatObject("<color=#FF0000FF>Disconnected!</color>");
     }
     threadRunning = false;
     client.Disconnect();
-    //getLogger().info("Thread Stopped!");
+    INFO("Thread Stopped!");
 }
 
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
@@ -132,7 +134,7 @@ MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
                 void, UnityEngine::SceneManagement::Scene prevScene, UnityEngine::SceneManagement::Scene nextScene) {
     SceneManager_Internal_ActiveSceneChanged(prevScene, nextScene);
     if(nextScene.IsValid()) {
-        std::string sceneName = to_utf8(csstrtostr(nextScene.get_name()));
+        std::string sceneName = nextScene.get_name();
         if(sceneName.find("Menu") != std::string::npos) {
             BSML::MainThreadScheduler::Schedule(
                 [] {
@@ -154,13 +156,14 @@ MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
 MOD_EXPORT_FUNC void setup(CModInfo& info) {
     info.id = MOD_ID;
     info.version = VERSION;
+    info.version_long = 0;
 
     Blacklist.insert("streamelements");
     Blacklist.insert("nightbot");
 
     modInfo.assign(info);
     getModConfig().Init(modInfo);
-    Logger.info("Completed setup!");
+    INFO("Completed setup!");
 }
 
 /// @brief Called later on in the game loading - a good time to install function hooks
@@ -171,11 +174,11 @@ MOD_EXPORT_FUNC void late_load() {
     BSML::Init();
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
-    Logger.info("Installing hooks (and custom-types init)...");
+    INFO("Installing hooks (and custom-types init)...");
     custom_types::Register::AutoRegister();
 
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
 
-    Logger.info("Installed all hooks!");
+    INFO("Installed all hooks!");
 }
 #pragma endregion

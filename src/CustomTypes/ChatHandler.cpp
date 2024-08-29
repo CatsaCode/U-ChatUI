@@ -15,7 +15,7 @@
 
 #include "CustomTypes/ChatHandler.hpp"
 
-#include "customlogger.hpp"
+#include "logging.hpp"
 
 #include "ModConfig.hpp"
 
@@ -32,7 +32,7 @@ void ChatUI::ChatHandler::Update() {
 
     Scene activeScene = SceneManager::GetActiveScene();
     if(activeScene.IsValid()){
-        std::string sceneName = to_utf8(csstrtostr(activeScene.get_name()));
+        std::string sceneName = activeScene.get_name();
         auto position = getModConfig().PositionMenu.GetValue();
         auto rotation = getModConfig().RotationMenu.GetValue();
         auto size = getModConfig().SizeMenu.GetValue();
@@ -56,7 +56,7 @@ void ChatUI::ChatHandler::Update() {
                 it = chatObjects.erase(it--);
             }
         } else {
-            TextMeshProUGUI* text = BSML::CreateText(LayoutTransform, object.Text);
+            TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
             text->set_enableWordWrapping(true);
             text->set_fontSize(3.2f);
             text->set_alignment(TextAlignmentOptions::MidlineLeft);

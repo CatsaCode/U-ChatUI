@@ -5,16 +5,17 @@
 #include "HMUI/ViewController.hpp"
 #include "HMUI/Touchable.hpp"
 #include "bsml/shared/BSML.hpp"
-
+#include "UnityEngine/UI/ContentSizeFitter.hpp"
 #include "UnityEngine/RectOffset.hpp"
 #include "UnityEngine/RectTransform.hpp"
 #include "UnityEngine/UI/RectMask2D.hpp"
 #include "HMUI/CurvedCanvasSettings.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 #include "VRUIControls/VRGraphicRaycaster.hpp"
+#include "bsml/shared/BSML/Components/Backgroundable.hpp"
 
 #include "ChatBuilder.hpp"
-#include "customlogger.hpp"
+#include "logging.hpp"
 
 using namespace BSML;
 using namespace UnityEngine;
@@ -34,7 +35,9 @@ void CreateChatGameObject() {
     
     chatHandler = chatGameObject->AddComponent<ChatUI::ChatHandler*>();
     chatGameObject->AddComponent<RectMask2D*>();
-    chatGameObject->AddComponent<Backgroundable*>()->ApplyBackgroundWithAlpha("round-rect-panel", 0.75f);
+    auto backgroundable = chatGameObject->AddComponent<Backgroundable*>();
+    backgroundable->ApplyBackground("round-rect-panel");
+    backgroundable->ApplyAlpha(0.75f);
     RectTransform* transform = chatGameObject->GetComponent<RectTransform*>();
 
     VerticalLayoutGroup* layout = BSML::Lite::CreateVerticalLayoutGroup(transform);

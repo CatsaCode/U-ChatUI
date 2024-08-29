@@ -4,7 +4,7 @@
 #include "HMUI/Touchable.hpp"
 #include "bsml/shared/BSML.hpp"
 
-#include "customlogger.hpp"
+#include "logging.hpp"
 #include "ModConfig.hpp"
 
 using namespace BSML;
