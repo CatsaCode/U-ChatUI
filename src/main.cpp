@@ -170,7 +170,8 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
 /// @return
 MOD_EXPORT_FUNC void late_load() {
     il2cpp_functions::Init();
-    getModConfig().Init(modInfo);
+    // Register custom types before using them
+    custom_types::Register::AutoRegister();
     BSML::Init();
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
