@@ -82,7 +82,8 @@ void ChatUI::ChatHandler::SetRotation(UnityEngine::Vector3 rotation) {
 
 void ChatUI::ChatHandler::SetSize(UnityEngine::Vector2 size) {
     if(Canvas)
-        Canvas->GetComponent<RectTransform*>()->set_sizeDelta(size);
+        _textRsize = UnityEngine::Vector2(size);
+        Canvas->GetComponent<RectTransform*>()->set_sizeDelta(_textRsize);
 }
 
 void ChatUI::ChatHandler::AddChatObject(ChatObject object) {

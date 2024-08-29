@@ -25,6 +25,8 @@ DECLARE_CLASS_CODEGEN(ChatUI, ChatHandler, UnityEngine::MonoBehaviour,
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, Canvas);
     DECLARE_INSTANCE_FIELD(UnityEngine::RectTransform*, LayoutTransform);
 
+    DECLARE_INSTANCE_FIELD(UnityEngine::Vector2, _textRsize);
+
     DECLARE_INSTANCE_METHOD(void, Update);
 
     DECLARE_OVERRIDE_METHOD(void, Finalize, il2cpp_utils::FindMethod("System", "Object", "Finalize"));
