@@ -54,10 +54,10 @@ void OnChatMessage(IRCMessage ircMessage, TwitchIRCClient* client) {
     std::string username = ircMessage.prefix.nick;
     std::string message = ircMessage.parameters.at(ircMessage.parameters.size() - 1);
     if (Blacklist.count(username)) {
-        INFO("Twitch Chat: Blacklisted user %s sent the message: %s", username.c_str(), message.c_str());
+        INFO("Twitch Chat: Blacklisted user {} sent the message: {}", username, message);
         return;
     } else {
-        INFO("Twitch Chat: User %s sent the message: %s", username.c_str(), message.c_str());
+        INFO("Twitch Chat: User {} sent the message: {}", username, message);
     }
     if (usersColorCache.find(username) == usersColorCache.end())
         usersColorCache.emplace(username, int_to_hex(rand() % 0x1000000, 6));
