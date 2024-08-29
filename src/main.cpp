@@ -170,13 +170,10 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
 /// @return
 MOD_EXPORT_FUNC void late_load() {
     il2cpp_functions::Init();
-    // Register custom types before using them
     custom_types::Register::AutoRegister();
     BSML::Init();
-
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
-    INFO("Installing hooks (and custom-types init)...");
-    custom_types::Register::AutoRegister();
+    INFO("Installing hooks...");
 
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
 
