@@ -57,7 +57,9 @@ void ChatUI::ChatHandler::Update() {
             }
         } else {
             TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
-            text->set_enableWordWrapping(false);
+            _textRsize = UnityEngine::Vector2(size);
+            Canvas->GetComponent<RectTransform*>()->set_sizeDelta(_textRsize);
+            text->set_enableWordWrapping(true);
             text->set_fontSize(3.2f);
             text->set_alignment(TextAlignmentOptions::MidlineLeft);
             text->set_margin(UnityEngine::Vector4(1.0f, 0.0f, 0.0f, 0.0f));
