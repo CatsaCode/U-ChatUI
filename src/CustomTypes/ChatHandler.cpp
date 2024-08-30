@@ -57,9 +57,6 @@ void ChatUI::ChatHandler::Update() {
             }
         } else {
             TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
-            // calling setsize because i have hope it will help ;))
-            size = getModConfig().SizeGame.GetValue();
-            SetSize(size);
             Canvas->GetComponent<RectTransform*>()->set_sizeDelta(_textRsize);
             // bad word wrapping
             text->set_enableWordWrapping(true);
