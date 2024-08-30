@@ -57,8 +57,11 @@ void ChatUI::ChatHandler::Update() {
             }
         } else {
             TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
-            _textRsize = UnityEngine::Vector2(size);
+            // I am going to destroy myself
             Canvas->GetComponent<RectTransform*>()->set_sizeDelta(_textRsize);
+            // calling setsize because i have hope it will help ;))
+            SetSize(size);
+            // bad word wrapping
             text->set_enableWordWrapping(true);
             text->set_fontSize(3.2f);
             text->set_alignment(TextAlignmentOptions::MidlineLeft);
