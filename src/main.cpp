@@ -1,3 +1,5 @@
+#include "main.hpp"
+
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
 
@@ -26,9 +28,6 @@
 #include <sstream>
 #include <chrono>
 
-modloader::ModInfo modInfo{MOD_ID, VERSION, 0};
-
-//TODO: Add to ModConfig
 std::unordered_set<std::string> Blacklist;
 
 std::map<std::string, std::string> usersColorCache;
@@ -157,11 +156,11 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
     info.id = MOD_ID;
     info.version = VERSION;
     info.version_long = 0;
+    modInfo.assign(info);
 
     Blacklist.insert("streamelements");
     Blacklist.insert("nightbot");
 
-    modInfo.assign(info);
     getModConfig().Init(modInfo);
     INFO("Completed setup!");
 }
@@ -172,11 +171,10 @@ MOD_EXPORT_FUNC void late_load() {
     il2cpp_functions::Init();
     custom_types::Register::AutoRegister();
     BSML::Init();
+
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
-
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
-
     INFO("Installed all hooks!");
 }
 #pragma endregion
