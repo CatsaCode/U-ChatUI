@@ -10,7 +10,7 @@
   "description": "Shows your Twitch Chat Ingame",
   "dependencies": [],
   "modFiles": ["${binary}"],
-
+  "coverImage": "cover.jpg",
   "libraryFiles": [],
   "fileCopies": []
 }
