@@ -1,9 +1,8 @@
-# ChatUI
+# ChatUI v2 (0.2.0)
 
-ChatUI in Beat Saber
-
-Use `qpm s build` to build
-Same goes for `qpm s copy` and `qpm s qmod`
+Bigger default chatbox & new font for the chat
+Changed from Twitch IRC to TwitchLib
+Better API Support and new BSML GUI
 
 ## Credits
 
