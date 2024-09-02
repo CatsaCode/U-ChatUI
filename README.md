@@ -1,7 +1,9 @@
 # ChatUI v2 (0.2.0)
 
 Bigger default chatbox & new font for the chat
+
 Changed from Twitch IRC to TwitchLib
+
 Better API Support and new BSML GUI
 
 ## Credits
