@@ -17,6 +17,7 @@
 
 #include "logging.hpp"
 
+#include "FontUtility.cpp"
 #include "ModConfig.hpp"
 
 DEFINE_TYPE(ChatUI, ChatHandler);
