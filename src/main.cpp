@@ -121,7 +121,7 @@ void TwitchIRCThread() {
     if(wasConnected) {
         wasConnected = false;
         INFO("Twitch Chat: Disconnected!");
-        AddChatObject("<color=#FF0000FF>Disconnected!</color>");
+        AddChatObject("<color=#9D9DA8>Disconnected from <color=#0008FF>Twitch!</color>");
     }
     threadRunning = false;
     client.Disconnect();
