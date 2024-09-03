@@ -11,7 +11,7 @@
 
 void SetInternalFont(UnityEngine::GameObject* textObject) {
     // Like why should I know what the name of the Font is
-    TMPro::TMP_FontAsset* tekoFont = UnityEngine::Resources::FindObjectsOfTypeAll<TMPro::TMP_FontAsset*>().FirstOrDefault(
+    TMPro::TMP_FontAsset* tekoFont = UnityEngine::Resources::FindObjectsOfTypeAll<TMPro::TMP_FontAsset*>()->FirstOrDefault( //Like damn
         [](TMPro::TMP_FontAsset* font) {
             return font->get_name() == "Teko-Light";
 
