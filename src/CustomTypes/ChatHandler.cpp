@@ -58,13 +58,12 @@ void ChatUI::ChatHandler::Update() {
             }
         } else {
             TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
-            text->set_sizeDelta(_textRsize);
             // Temporary word wrapping false
             text->set_enableWordWrapping(false);
             text->set_fontSize(3.2f);
             text->set_alignment(TextAlignmentOptions::MidlineLeft);
             text->set_margin(UnityEngine::Vector4(1.0f, 0.0f, 0.0f, 0.0f));
-            text->SetInternalFont();
+            SetInternalFont(object.Text);
             object.GameObject = text->get_gameObject();
         }
     }
