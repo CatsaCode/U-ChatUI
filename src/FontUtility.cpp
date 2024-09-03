@@ -4,7 +4,7 @@
 #include "UnityEngine/GameObject.hpp"
 
 #include "TMPro/TMP_FontAsset.hpp"
-#include "UnityEngine/TextMeshProUGUI.hpp"
+#include "TMPro/TextMeshProUGUI.hpp"
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Resources.hpp"
 #include "UnityEngine/Font.hpp"
