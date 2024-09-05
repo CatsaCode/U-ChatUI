@@ -89,7 +89,7 @@ void TwitchIRCThread() {
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
                         INFO("Twitch Chat: Joined Channel {}!", currentChannel);
-                        AddChatObject("<color=#FFFFFFFF>Joined Channel:</color> <color=#FFB300FF>" + currentChannel + "</color>");
+                        AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
                     }
                 }
             }
@@ -107,7 +107,7 @@ void TwitchIRCThread() {
                     if (client.Connect()) {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
-                            AddChatObject("<color=#FFFFFFFF>Logged In!</color>");
+                            AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
                             INFO("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";

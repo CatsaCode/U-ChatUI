@@ -32,7 +32,7 @@ void CreateChatGameObject() {
     chatHandler = chatGameObject->AddComponent<ChatUI::ChatHandler*>();
     chatGameObject->AddComponent<RectMask2D*>();
     auto backgroundable = chatGameObject->AddComponent<Backgroundable*>();
-    backgroundable->ApplyBackground("round-rect-panel");
+    backgroundable->ApplyBackground("panel");
     backgroundable->ApplyAlpha(0.75f);
     RectTransform* transform = chatGameObject->GetComponent<RectTransform*>();
 

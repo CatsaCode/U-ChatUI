@@ -60,10 +60,10 @@ void ChatUI::ChatHandler::Update() {
             TextMeshProUGUI* text = BSML::Lite::CreateText(LayoutTransform, object.Text);
             // Temporary word wrapping false
             text->set_enableWordWrapping(false);
-            text->set_fontSize(3.2f);
+            text->set_fontSize(3.0f);
             text->set_alignment(TextAlignmentOptions::MidlineLeft);
             text->set_margin(UnityEngine::Vector4(1.0f, 0.0f, 0.0f, 0.0f));
-            SetInternalFont(object.Text);
+            SetInternalFont(text->get_gameObject());
             object.GameObject = text->get_gameObject();
         }
     }
