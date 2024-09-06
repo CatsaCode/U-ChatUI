@@ -107,7 +107,7 @@ void TwitchIRCThread() {
                     if (client.Connect()) {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
-                            AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
+                            AddChatObject("<color=#9D9DA8>Established connection to <color=#0008FF>Twitch</color>");
                             INFO("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";
