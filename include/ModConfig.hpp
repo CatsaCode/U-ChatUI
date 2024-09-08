@@ -20,8 +20,8 @@ DECLARE_CONFIG(ModConfig,
     CONFIG_VALUE(RotationGame, UnityEngine::Vector3, "Game Rotation", UnityEngine::Vector3(-42.0f, 0.0f, 0.0f));
     CONFIG_VALUE(SizeGame, UnityEngine::Vector2, "Game Size", UnityEngine::Vector2(68.0f, 88.0f));
 
-    CONFIG_VALUE(FontSizeChat, UnityEngine::Vector2, "Font Size", UnityEngine::Vector2(3.0f));
-    CONFIG_VALUE(BackGroundTransChat, UnityEngine::Vector2, "Background Transparency", UnityEngine::Vector2(3.0f));
+    CONFIG_VALUE(FontSizeChat, UnityEngine::Vector2, "Font Size", UnityEngine::Vector2(3.0f, 3.0f));
+    CONFIG_VALUE(BackGroundTransChat, UnityEngine::Vector2, "Background Transparency", UnityEngine::Vector2(3.0f, 3.0f));
 
     // Not for V2 Update
 
@@ -45,7 +45,7 @@ DECLARE_CONFIG(ModConfig,
     // Values for ChatEmoteRain
 
     CONFIG_VALUE(ChatEmoteRain_MaxEmoteCount, float, "Max Emote Count", 20);
-    CONFIG_VALUE(ChatEmoteRain_EmoteSize, UnityEngine::Vector2, "Emote Size", UnityEngine::Vector2(4.0f));
+    CONFIG_VALUE(ChatEmoteRain_EmoteSize, UnityEngine::Vector2, "Emote Size", UnityEngine::Vector2(4.0f, 4.0f));
     CONFIG_VALUE(ChatEmoteRain_ActivateCommand, bool, "Activate !er command", false);
     CONFIG_VALUE(ChatEmoteRain_MODCommand, bool, "Give permissions to MOD", false);
     CONFIG_VALUE(ChatEmoteRain_VIPCommand, bool, "Give permissions to VIP", false);

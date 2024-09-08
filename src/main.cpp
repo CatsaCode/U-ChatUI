@@ -172,7 +172,7 @@ MOD_EXPORT_FUNC void late_load() {
     custom_types::Register::AutoRegister();
     BSML::Init();
 
-    BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
+    BSML::Register::RegisterMainMenu("ChatUI", "ChatUI", "TODO Hover hint", DidActivate);
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
