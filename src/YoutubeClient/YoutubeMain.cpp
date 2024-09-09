@@ -11,12 +11,10 @@
 
 #include "YoutubeClient/Socket.hpp"
 #include "custom-types/shared/register.hpp"
-#include "logging.hpp"
 
 std::string getHostIP(const std::string& host) {
     struct hostent* he = gethostbyname(host.c_str());
     if (he == nullptr) {
-        INFO("Could not resolve host: " + host);
         return "";
     }
     struct in_addr** addr_list = (struct in_addr**)he->h_addr_list;
@@ -29,7 +27,6 @@ std::string fetchHTML(const std::string& host, const std::string& page) {
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        INFO("Socket creation failed.");
         return "";
     }
 
@@ -39,7 +36,6 @@ std::string fetchHTML(const std::string& host, const std::string& page) {
     inet_pton(AF_INET, ip.c_str(), &server.sin_addr);
 
     if (connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0) {
-        INFO("Connection failed.");
         close(sock);
         return "";
     }
@@ -68,7 +64,6 @@ bool parseChatMessage(const std::string& html, std::string& username, std::strin
     std::string marker = "live-chat-text-message";
     size_t pos = html.find(marker);
     if (pos == std::string::npos) {
-        INFO("No chat messages found.");
         return false;
     }
 
@@ -120,7 +115,6 @@ void continuouslyCheckForMessages(const std::string& videoID, void (*onNewMessag
                 }
             }
         } else {
-            INFO("Failed to fetch HTML.");
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
