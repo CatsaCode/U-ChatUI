@@ -9,7 +9,6 @@
 #include <thread>
 
 #include "YoutubeClient/Socket.hpp"
-#include "custom-types/shared/register.hpp"
 
 std::string getHostIP(const std::string& host) {
     struct hostent* he = gethostbyname(host.c_str());
