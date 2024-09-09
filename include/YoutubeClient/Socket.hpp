@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "UnityEngine/GameObject.hpp"
 
 std::string getHostIP(const std::string& host);
 
