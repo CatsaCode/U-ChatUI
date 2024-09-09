@@ -1,8 +1,5 @@
 #pragma once
 
-#include "YoutubeClient/Socket.hpp"
-#include "logging.hpp"
-
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -11,6 +8,10 @@
 #include <netdb.h>
 #include <chrono>
 #include <thread>
+
+#include "YoutubeClient/Socket.hpp"
+#include "custom-types/shared/register.hpp"
+#include "logging.hpp"
 
 std::string getHostIP(const std::string& host) {
     struct hostent* he = gethostbyname(host.c_str());
