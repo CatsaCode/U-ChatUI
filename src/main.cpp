@@ -28,8 +28,6 @@
 #include <sstream>
 #include <chrono>
 
-// #include "YoutubeClient/Socket.hpp"
-
 std::unordered_set<std::string> Blacklist;
 
 std::map<std::string, std::string> usersColorCache;
