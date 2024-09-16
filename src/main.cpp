@@ -91,7 +91,7 @@ void TwitchIRCThread() {
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
                         INFO("Twitch Chat: Joined Channel {}!", currentChannel);
-                        AddChatObject("<color=#FFFFFFFF>Joined Channel:</color> <color=#FFB300FF>" + currentChannel + "</color>");
+                        AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
                     }
                 }
             }
@@ -109,7 +109,7 @@ void TwitchIRCThread() {
                     if (client.Connect()) {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
-                            AddChatObject("<color=#FFFFFFFF>Logged In!</color>");
+                            AddChatObject("<color=#9D9DA8>Established connection to <color=#0008FF>Twitch</color>");
                             INFO("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";
@@ -123,12 +123,32 @@ void TwitchIRCThread() {
     if(wasConnected) {
         wasConnected = false;
         INFO("Twitch Chat: Disconnected!");
-        AddChatObject("<color=#FF0000FF>Disconnected!</color>");
+        AddChatObject("<color=#9D9DA8>Disconnected from <color=#0008FF>Twitch!</color>");
     }
     threadRunning = false;
     client.Disconnect();
     INFO("Thread Stopped!");
 }
+
+MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
+                &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,
+                void, UnityEngine::SceneManagement::Scene prevScene, UnityEngine::SceneManagement::Scene nextScene) {
+    SceneManager_Internal_ActiveSceneChanged(prevScene, nextScene);
+    if(nextScene.IsValid()) {
+        std::string sceneName = nextScene.get_name();
+        if(sceneName.find("Menu") != std::string::npos) {
+            BSML::MainThreadScheduler::Schedule(
+                [] {
+                    if(!chatHandler)
+                        CreateChatGameObject();
+                    if (!threadRunning)
+                        std::thread (TwitchIRCThread).detach();
+                }
+            );
+        }
+    }
+}
+
 
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
                 &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,
