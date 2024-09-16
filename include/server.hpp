@@ -1,6 +1,8 @@
 #pragma once
 
-#ifndef SERVER_HPP
+
+//isnt used?
+//#ifndef SERVER_HPP
 #define SERVER_HPP
 
 #include <string>

@@ -17,7 +17,7 @@ std::string read_html_file(const std::string& filename) {
 }
 
 void append_to_html(std::string& html, const std::string& custom_content) {
-    // size_t pos = html.find("</body>");
+    size_t pos = html.find("</body>");
     if (pos != std::string::npos) {
         html.insert(pos, custom_content);
     }
