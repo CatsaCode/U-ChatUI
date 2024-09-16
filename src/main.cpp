@@ -22,6 +22,8 @@
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
+#include "server.hpp"
+
 #include <map>
 #include <thread>
 #include <iomanip>
@@ -158,10 +160,16 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
     info.version_long = 0;
     modInfo.assign(info);
 
+    //adding an blacklist option in-game def because everyone needs this
     Blacklist.insert("streamelements");
     Blacklist.insert("nightbot");
 
     getModConfig().Init(modInfo);
+
+    //This should be an good time to start up the server
+    //Changeable Port option in-game? no.
+    start_server(4141);
+
     INFO("Completed setup!");
 }
 
@@ -176,5 +184,7 @@ MOD_EXPORT_FUNC void late_load() {
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
+
+
 }
 #pragma endregion
