@@ -16,13 +16,13 @@
 #include "UnityEngine/SceneManagement/Scene.hpp"
 #include "UnityEngine/SceneManagement/SceneManager.hpp"
 
+#include "server.hpp"
+
 #include "CustomTypes/ChatHandler.hpp"
 #include "ChatBuilder.hpp"
 #include "logging.hpp"
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
-
-#include "server.hpp"
 
 #include <map>
 #include <thread>
@@ -150,26 +150,6 @@ MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
 }
 
 
-MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
-                &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,
-                void, UnityEngine::SceneManagement::Scene prevScene, UnityEngine::SceneManagement::Scene nextScene) {
-    SceneManager_Internal_ActiveSceneChanged(prevScene, nextScene);
-    if(nextScene.IsValid()) {
-        std::string sceneName = nextScene.get_name();
-        if(sceneName.find("Menu") != std::string::npos) {
-            BSML::MainThreadScheduler::Schedule(
-                [] {
-                    if(!chatHandler)
-                        CreateChatGameObject();
-                    if (!threadRunning)
-                        std::thread (TwitchIRCThread).detach();
-                }
-            );
-        }
-    }
-}
-
-
 #pragma region Mod setup
 /// @brief Called at the early stages of game loading
 /// @param info
@@ -180,16 +160,10 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
     info.version_long = 0;
     modInfo.assign(info);
 
-    //adding an blacklist option in-game def because everyone needs this
     Blacklist.insert("streamelements");
     Blacklist.insert("nightbot");
 
     getModConfig().Init(modInfo);
-
-    //This should be an good time to start up the server
-    //Changeable Port option in-game? no.
-    start_server(4141);
-
     INFO("Completed setup!");
 }
 
@@ -202,9 +176,10 @@ MOD_EXPORT_FUNC void late_load() {
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
+    //This should be an good time to start up the server
+    //Changeable Port option in-game? no.
+    start_server(4141);
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
-
-
 }
 #pragma endregion
