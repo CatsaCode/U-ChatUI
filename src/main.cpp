@@ -81,6 +81,10 @@ void TwitchIRCThread() {
     milliseconds lastJoinTry = 0ms;
     milliseconds lastConnectTry = 0ms;
     bool wasConnected = false;
+    //This should be an good time to start up the server
+    //Changeable Port option in-game? no.
+    start_server(4141);
+    AddChatObject("<color=#9D9DA8>Server got called and started on port </color> <color=#0008FF>4141</color>");
     while(threadRunning) {
         auto currentTime = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
         if(client.Connected()) {
@@ -176,9 +180,6 @@ MOD_EXPORT_FUNC void late_load() {
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
-    //This should be an good time to start up the server
-    //Changeable Port option in-game? no.
-    start_server(4141);
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
 }
