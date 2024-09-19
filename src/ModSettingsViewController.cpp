@@ -62,6 +62,16 @@ void HighlightUIComponent(GameObject* object, Color color = Color(1.0f, 1.0f, 1.
     image->color = color;
 }
 
+UI::VerticalLayoutGroup* CreateLayout(const BSML::Lite::TransformWrapper& parent) {
+    // Crate component that will space other components vertically
+    auto verticalLayout = BSML::Lite::CreateVerticalLayoutGroup(parent);
+    // Place components one on top of the other. Don't try to space them out evenly
+    verticalLayout->childControlHeight = false;
+    verticalLayout->childForceExpandHeight = false;
+
+    return verticalLayout;
+}
+
 // Create a row of buttons directly side by side 
 HorizontalLayoutGroup* CreateTabSelector(const BSML::Lite::TransformWrapper& parent, std::vector<std::string> labels, float width, std::function<void(int)> selectionFunc) {
     // Create a horizontal layout to automatically space out each tab button
@@ -86,18 +96,64 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     if(!firstActivation) return;
 
     // Container for the entire mod menu  
-    auto mainContainer = BSML::Lite::CreateVerticalLayoutGroup(self->transform);
-    mainContainer->childControlHeight = false;
-    mainContainer->childForceExpandHeight = false;
-    mainContainer->spacing = 1.0f;
+    auto mainContainer = CreateLayout(self->transform);
+    // mainContainer->spacing = 1.0f; // ?
+    // HighlightUIComponent(mainContainer->gameObject, Color(0.5f, 0.5f, 0.5f, 1.0f));
 
-    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emote Rain"}, 90.0f, [](int selection){
-        if(selection == 0) INFO("Tab: General");
-        else if(selection == 1) INFO("Tab: Panel");
-        else INFO("Tab: Emote Rain");
+    // Pre-create each tab GameObject so they can be referenced in tabsRow
+    auto generalTab = CreateLayout(mainContainer);
+    auto panelTab = CreateLayout(mainContainer);
+    auto emoteTab = CreateLayout(mainContainer);
+    // HighlightUIComponent(generalTab->gameObject, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    // HighlightUIComponent(panelTab->gameObject, Color(0.0f, 1.0f, 0.0f, 1.0f));
+    // HighlightUIComponent(emoteTab->gameObject, Color(0.0f, 0.0f, 1.0f, 1.0f));
+    std::vector<GameObject*> tabs = {
+        generalTab->gameObject,
+        panelTab->gameObject,
+        emoteTab->gameObject
+    };
+
+    // Create a tab selector to enable each tab
+    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emote Rain"}, 90.0f, [tabs](int selection){
+        // Disable all tabs
+        for(int i = 0; i < tabs.size(); i++) tabs[i]->gameObject->SetActive(false);
+        // Enable the selected tab
+        tabs[selection]->gameObject->SetActive(true);
     });
+    tabsRow->transform->SetAsFirstSibling();
 
-    // InfoTree(tabsRow->gameObject);
+
+
+
+    AddConfigValueInputString(generalTab, getModConfig().Channel);
+    AddConfigValueToggle(generalTab, getModConfig().SongOverlay_Enabled);
+
+
+
+
+    AddConfigValueIncrementVector3(panelTab, getModConfig().PositionMenu, 2, 0.05f);
+    AddConfigValueIncrementVector3(panelTab, getModConfig().RotationMenu, 0, 1.0f);
+    AddConfigValueIncrementVector2(panelTab, getModConfig().SizeMenu, 0, 1.0f);
+
+    AddConfigValueToggle(panelTab, getModConfig().ForceGame);
+
+    AddConfigValueIncrementVector3(panelTab, getModConfig().PositionGame, 2, 0.05f);
+    AddConfigValueIncrementVector3(panelTab, getModConfig().RotationGame, 0, 1.0f);
+    AddConfigValueIncrementVector2(panelTab, getModConfig().SizeGame, 0, 1.0f);
+
+
+
+
+    AddConfigValueIncrementFloat(emoteTab, getModConfig().ChatEmoteRain_MaxEmoteCount, 0, 5.0f, 0.0f, 100.0f);
+    AddConfigValueIncrementVector2(emoteTab, getModConfig().ChatEmoteRain_EmoteSize, 1, 0.1f);
+    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_ActivateCommand);
+    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_MODCommand);
+    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_VIPCommand);
+    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_SUBCommand);
+    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_USERCommand);
+
+
+
 
     // // self->get_gameObject()->AddComponent<Touchable*>();
 
