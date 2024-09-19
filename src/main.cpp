@@ -22,6 +22,12 @@
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
+#include <httpserver.hpp>
+
+using namespace httpserver;
+
+
+
 #include <map>
 #include <thread>
 #include <iomanip>
@@ -40,6 +46,13 @@ inline std::string int_to_hex(T val, size_t width=sizeof(T)*2) {
     ss << "#" << std::setfill('0') << std::setw(width) << std::hex << (val|0) << "ff";
     return ss.str();
 }
+
+class hello_world_resource : public http_resource {
+public:
+    std::shared_ptr<http_response> render(const http_request&) {
+        return std::shared_ptr<http_response>(new string_response("Hello, World!"));
+    }
+};
 
 void AddChatObject(std::string text) {
     ChatObject chatObject = {};
@@ -162,6 +175,15 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
     Blacklist.insert("nightbot");
 
     getModConfig().Init(modInfo);
+
+    webserver ws = create_webserver(4141);
+
+    hello_world_resource hwr;
+    ws.register_resource("/", &hwr);
+    ws.start(true);
+        
+    return 0;
+
     INFO("Completed setup!");
 }
 
