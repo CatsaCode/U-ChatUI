@@ -28,15 +28,6 @@
 #include <sstream>
 #include <chrono>
 
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-#include "httplib.h"
-
-httplib::SSLServer svr;
-
-svr.Get("/", [](const httplib::Request &, httplib::Response &res) {
-  res.set_content("Server works! Pls screenshot this or i will not belive it :c", "text/plain");
-});
-
 std::unordered_set<std::string> Blacklist;
 
 std::map<std::string, std::string> usersColorCache;
@@ -184,7 +175,6 @@ MOD_EXPORT_FUNC void late_load() {
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
     INFO("ChatUI Webserver is starting on the port 4141");
-    svr.listen("localhost", 4141);
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
 }
