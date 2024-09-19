@@ -16,8 +16,6 @@
 #include "UnityEngine/SceneManagement/Scene.hpp"
 #include "UnityEngine/SceneManagement/SceneManager.hpp"
 
-#include "server.hpp"
-
 #include "CustomTypes/ChatHandler.hpp"
 #include "ChatBuilder.hpp"
 #include "logging.hpp"
@@ -29,6 +27,15 @@
 #include <iomanip>
 #include <sstream>
 #include <chrono>
+
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+#include "httplib.h"
+
+httplib::SSLServer svr;
+
+svr.Get("/", [](const httplib::Request &, httplib::Response &res) {
+  res.set_content("Server works! Pls screenshot this or i will not belive it :c", "text/plain");
+});
 
 std::unordered_set<std::string> Blacklist;
 
@@ -81,10 +88,6 @@ void TwitchIRCThread() {
     milliseconds lastJoinTry = 0ms;
     milliseconds lastConnectTry = 0ms;
     bool wasConnected = false;
-    //This should be an good time to start up the server
-    //Changeable Port option in-game? no.
-    start_server(4141);
-    AddChatObject("<color=#9D9DA8>Server got called and started on port </color> <color=#0008FF>4141</color>");
     while(threadRunning) {
         auto currentTime = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
         if(client.Connected()) {
@@ -180,6 +183,8 @@ MOD_EXPORT_FUNC void late_load() {
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
+    INFO("ChatUI Webserver is starting on the port 4141");
+    svr.listen("localhost", 4141);
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
 }
