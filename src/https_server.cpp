@@ -1,10 +1,6 @@
 #include "server/client_https.hpp"
 #include "server/server_https.hpp"
 
-// Added for the json-example
-#define BOOST_SPIRIT_THREADSAFE
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 // Added for the default_resource example
 #include "server/crypto.hpp"
@@ -14,8 +10,6 @@
 #include <vector>
 
 using namespace std;
-// Added for the json-example:
-using namespace boost::property_tree;
 
 using HttpsServer = SimpleWeb::Server<SimpleWeb::HTTPS>;
 using HttpsClient = SimpleWeb::Client<SimpleWeb::HTTPS>;
@@ -45,43 +39,9 @@ int main() {
     // response->write(content);
   };
 
-  // POST-example for the path /json, responds firstName+" "+lastName from the posted json
-  // Responds with an appropriate error message if the posted json is not valid, or if firstName or lastName is missing
-  // Example posted json:
-  // {
-  //   "firstName": "John",
-  //   "lastName": "Smith",
-  //   "age": 25
-  // }
-  server.resource["^/json$"]["POST"] = [](shared_ptr<HttpsServer::Response> response, shared_ptr<HttpsServer::Request> request) {
-    try {
-      ptree pt;
-      read_json(request->content, pt);
-
-      auto name = pt.get<string>("firstName") + " " + pt.get<string>("lastName");
-
-      *response << "HTTP/1.1 200 OK\r\n"
-                << "Content-Length: " << name.length() << "\r\n\r\n"
-                << name;
-    }
-    catch(const exception &e) {
-      *response << "HTTP/1.1 400 Bad Request\r\nContent-Length: " << strlen(e.what()) << "\r\n\r\n"
-                << e.what();
-    }
 
 
-    // Alternatively, using a convenience function:
-    // try {
-    //     ptree pt;
-    //     read_json(request->content, pt);
 
-    //     auto name=pt.get<string>("firstName")+" "+pt.get<string>("lastName");
-    //     response->write(name);
-    // }
-    // catch(const exception &e) {
-    //     response->write(SimpleWeb::StatusCode::client_error_bad_request, e.what());
-    // }
-  };
 
   // GET-example for the path /info
   // Responds with request-information
@@ -213,28 +173,28 @@ int main() {
 
   // Client examples
   // Second create() parameter set to false: no certificate verification
-  HttpsClient client("localhost:8080", false);
+  //HttpsClient client("localhost:8080", false);
 
-  string json_string = "{\"firstName\": \"John\",\"lastName\": \"Smith\",\"age\": 25}";
+  // string json_string = "{\"firstName\": \"John\",\"lastName\": \"Smith\",\"age\": 25}";
 
   // Synchronous request examples
-  try {
-    auto r1 = client.request("GET", "/match/123");
-    cout << r1->content.rdbuf() << endl; // Alternatively, use the convenience function r1->content.string()
+  //try {
+    //auto r1 = client.request("GET", "/match/123");
+    //cout << r1->content.rdbuf() << endl; // Alternatively, use the convenience function r1->content.string()
 
-    auto r2 = client.request("POST", "/string", json_string);
-    cout << r2->content.rdbuf() << endl;
-  }
-  catch(const SimpleWeb::system_error &e) {
-    cerr << "Client request error: " << e.what() << endl;
-  }
+    //auto r2 = client.request("POST", "/string", json_string);
+    //cout << r2->content.rdbuf() << endl;
+  //}
+  //catch(const SimpleWeb::system_error &e) {
+    //cerr << "Client request error: " << e.what() << endl;
+  //}
 
   // Asynchronous request example
-  client.request("POST", "/json", json_string, [](shared_ptr<HttpsClient::Response> response, const SimpleWeb::error_code &ec) {
-    if(!ec)
-      cout << response->content.rdbuf() << endl;
-  });
-  client.io_service->run();
+  //client.request("POST", "/json", json_string, [](shared_ptr<HttpsClient::Response> response, const SimpleWeb::error_code &ec) {
+    //if(!ec)
+      //cout << response->content.rdbuf() << endl;
+  //});
+  //client.io_service->run();
 
-  server_thread.join();
+  //server_thread.join();
 }
