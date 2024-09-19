@@ -22,7 +22,7 @@
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
-#include <httpserver.hpp>
+#include "httpserver/httpserver.hpp"
 
 using namespace httpserver;
 
