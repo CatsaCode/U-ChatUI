@@ -18,8 +18,8 @@ namespace SimpleWeb {
   namespace make_error_code = std;
 } // namespace SimpleWeb
 #else
-#include <boost/asio.hpp>
-#include <boost/asio/steady_timer.hpp>
+//#include <boost/asio.hpp>
+//#include <boost/asio/steady_timer.hpp>
 namespace SimpleWeb {
   namespace asio = boost::asio;
   using error_code = boost::system::error_code;
