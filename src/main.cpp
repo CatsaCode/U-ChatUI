@@ -22,15 +22,16 @@
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
-#include "http.hpp"
-
 #include <map>
 #include <thread>
 #include <iomanip>
 #include <sstream>
 #include <chrono>
 
-HttpServer server;
+#define HTTPSERVER_IMPL
+#include "httpserver.h"
+
+#define RESPONSE "Hello, World!"
 
 std::unordered_set<std::string> Blacklist;
 
@@ -46,6 +47,15 @@ void AddChatObject(std::string text) {
     if(chatHandler)
         chatHandler->AddChatObject(chatObject);
 }
+
+void handle_request(struct http_request_s* request) {
+  struct http_response_s* response = http_response_init();
+  http_response_status(response, 200);
+  http_response_header(response, "Content-Type", "text/plain");
+  http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+  http_respond(request, response);
+}
+
 
 void OnChatMessage(IRCMessage ircMessage, TwitchIRCClient* client) {
     std::string username = ircMessage.prefix.nick;
@@ -162,14 +172,8 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
 
     getModConfig().Init(modInfo);
 
-    INFO("ChatUI HTTP Server - Starting on port 4141 (Q7Q7!W8W8)");
-    server.startListening(4141);
-
-    INFO("ChatUI HTTP Server - Loading HTML file from the src path (Q7Q7!W8W8)");
-    server.when("/")
-        ->serveFile("SFIles/index.html");
-        INFO("ChatUI HTTP Server - HTML file loaded on localhost:4141/ (Q7Q7!W8W8)");
-
+    struct http_server_s* server = http_server_init(4141, handle_request);
+    http_server_listen(server);
     INFO("Completed setup!");
 }
 
