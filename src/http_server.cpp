@@ -58,7 +58,6 @@ void HTTPServer::start() {
     socklen_t clientLen = sizeof(clientAddr);
 
     while (true) {
-
         int clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientLen);
         if (clientSocket < 0) {
             std::cerr << "Error: Failed to accept client connection." << std::endl;
@@ -77,7 +76,6 @@ void HTTPServer::handleClient(int clientSocket) {
     char buffer[1024];
     std::memset(buffer, 0, sizeof(buffer));
 
-
     int bytesRead = read(clientSocket, buffer, sizeof(buffer));
     if (bytesRead < 0) {
         std::cerr << "Error: Failed to read from client socket." << std::endl;
@@ -91,15 +89,12 @@ void HTTPServer::handleClient(int clientSocket) {
 }
 
 void HTTPServer::sendResponse(int clientSocket, const std::string& content) {
+    std::string response = "HTTP/1.1 200 OK\r\n";
+    response += "Content-Length: " + std::to_string(content.size()) + "\r\n";
+    response += "Content-Type: text/html\r\n";
+    response += "Connection: close\r\n";
+    response += "\r\n";
+    response += content;
 
-    std::stringstream response;
-    response << "HTTP/1.1 200 OK\r\n";
-    response << "Content-Length: " << content.size() << "\r\n";
-    response << "Content-Type: text/html\r\n";
-    response << "Connection: close\r\n";
-    response << "\r\n";
-    response << content; 
-
-    std::string responseStr = response.str();
-    write(clientSocket, responseStr.c_str(), responseStr.size());
+    write(clientSocket, response.c_str(), response.size());
 }
