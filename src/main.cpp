@@ -35,6 +35,14 @@ std::map<std::string, std::string> usersColorCache;
 bool threadRunning = false;
 
 
+template <typename T>
+inline std::string int_to_hex(T val, size_t width=sizeof(T)*2) {
+    std::stringstream ss;
+    ss << "#" << std::setfill('0') << std::setw(width) << std::hex << (val|0) << "ff";
+    return ss.str();
+}
+
+
 void AddChatObject(std::string text) {
     ChatObject chatObject = {};
     chatObject.Text = text;
@@ -85,7 +93,6 @@ void TwitchIRCThread() {
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
                         INFO("Twitch Chat: Joined Channel {}!", currentChannel);
-                        AddChatObject("<color=#0008FF>[DEV] <color=#9D9DA8>HTTP Server started on Port <color=#0008FF>4141</color>");
                         AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
                     }
                 }
