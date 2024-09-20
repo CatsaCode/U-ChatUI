@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef HTTP_SERVER_HPP
 #define HTTP_SERVER_HPP
 
@@ -7,7 +6,7 @@
 
 class HTTPServer {
 public:
-    HTTPServer(int port);
+    HTTPServer(int port = 4141);
     ~HTTPServer();
 
     void start();
