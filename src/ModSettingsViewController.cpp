@@ -130,16 +130,21 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
 
 
+    auto panelTabRow = BSML::Lite::CreateHorizontalLayoutGroup(panelTab);
+    panelTabRow->childControlWidth = false;
+    panelTabRow->childForceExpandWidth = false;
+    panelTabRow->spacing = 15;
+    auto leftPanelTab = CreateLayout(panelTabRow);
+    auto rightPanelTab = CreateLayout(panelTabRow);
+    AddConfigValueIncrementVector3(leftPanelTab, getModConfig().PositionMenu, 2, 0.05f);
+    AddConfigValueIncrementVector3(leftPanelTab, getModConfig().RotationMenu, 0, 1.0f);
+    AddConfigValueIncrementVector2(leftPanelTab, getModConfig().SizeMenu, 0, 1.0f);
 
-    AddConfigValueIncrementVector3(panelTab, getModConfig().PositionMenu, 2, 0.05f);
-    AddConfigValueIncrementVector3(panelTab, getModConfig().RotationMenu, 0, 1.0f);
-    AddConfigValueIncrementVector2(panelTab, getModConfig().SizeMenu, 0, 1.0f);
+    AddConfigValueToggle(rightPanelTab, getModConfig().ForceGame);
 
-    AddConfigValueToggle(panelTab, getModConfig().ForceGame);
-
-    AddConfigValueIncrementVector3(panelTab, getModConfig().PositionGame, 2, 0.05f);
-    AddConfigValueIncrementVector3(panelTab, getModConfig().RotationGame, 0, 1.0f);
-    AddConfigValueIncrementVector2(panelTab, getModConfig().SizeGame, 0, 1.0f);
+    AddConfigValueIncrementVector3(rightPanelTab, getModConfig().PositionGame, 2, 0.05f);
+    AddConfigValueIncrementVector3(rightPanelTab, getModConfig().RotationGame, 0, 1.0f);
+    AddConfigValueIncrementVector2(rightPanelTab, getModConfig().SizeGame, 0, 1.0f);
 
 
 
