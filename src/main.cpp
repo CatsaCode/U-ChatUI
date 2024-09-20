@@ -22,11 +22,7 @@
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
 
-#include "httpserver/httpserver.hpp"
-
-using namespace httpserver;
-
-
+#include "http.hpp"
 
 #include <map>
 #include <thread>
@@ -34,25 +30,14 @@ using namespace httpserver;
 #include <sstream>
 #include <chrono>
 
+HttpServer server;
+
 std::unordered_set<std::string> Blacklist;
 
 std::map<std::string, std::string> usersColorCache;
 
 bool threadRunning = false;
 
-template <typename T>
-inline std::string int_to_hex(T val, size_t width=sizeof(T)*2) {
-    std::stringstream ss;
-    ss << "#" << std::setfill('0') << std::setw(width) << std::hex << (val|0) << "ff";
-    return ss.str();
-}
-
-class hello_world_resource : public http_resource {
-public:
-    std::shared_ptr<http_response> render(const http_request&) {
-        return std::shared_ptr<http_response>(new string_response("Hello, World!"));
-    }
-};
 
 void AddChatObject(std::string text) {
     ChatObject chatObject = {};
@@ -102,6 +87,7 @@ void TwitchIRCThread() {
                     if(client.JoinChannel(targetChannel)) {
                         currentChannel = targetChannel;
                         INFO("Twitch Chat: Joined Channel {}!", currentChannel);
+                        AddChatObject("<color=#0008FF>[DEV] <color=#9D9DA8>HTTP Server started on Port <color=#0008FF>4141</color>");
                         AddChatObject("<color=#9D9DA8>Connected to the channel</color> <color=#0008FF>[TWITCH] " + currentChannel + "</color>");
                     }
                 }
@@ -176,13 +162,13 @@ MOD_EXPORT_FUNC void setup(CModInfo& info) {
 
     getModConfig().Init(modInfo);
 
-    webserver ws = create_webserver(4141);
+    INFO("ChatUI HTTP Server - Starting on port 4141 (Q7Q7!W8W8)");
+    server.startListening(4141);
 
-    hello_world_resource hwr;
-    ws.register_resource("/", &hwr);
-    ws.start(true);
-        
-    return 0;
+    INFO("ChatUI HTTP Server - Loading HTML file from the src path (Q7Q7!W8W8)");
+    server.when("/")
+        ->serveFile("SFIles/index.html");
+        INFO("ChatUI HTTP Server - HTML file loaded on localhost:4141/ (Q7Q7!W8W8)");
 
     INFO("Completed setup!");
 }
@@ -196,7 +182,6 @@ MOD_EXPORT_FUNC void late_load() {
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
     INFO("Installing hooks...");
-    INFO("ChatUI Webserver is starting on the port 4141");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
 }
