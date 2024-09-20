@@ -1,9 +1,19 @@
-# ChatUI
+# ChatUI v2 (0.2.0)
+ChatUI offers you the option to display the Twitch chat via Beat Saber.
+There are a few tutorials here on how to use ChatUI correctly and how to get the best streaming experience on Quest.
 
-ChatUI in Beat Saber
+## Installation
+Install the mod via MBF or download it directly on GitHub on the release page.
 
-Use `qpm s build` to build
-Same goes for `qpm s copy` and `qpm s qmod`
+## How do I stream lag-free and smooth on Quest
+
+First of all, Meta has the website where you can see your stream directly on the website. However, it is not the best as it can usually lead to audio problems, graphics problems or still images. Recommended that you get the [Meta Quest Developer Hub](https://developer.oculus.com/downloads/package/oculus-developer-hub-win/). This is an app from Meta with a special streaming option. The only thing that is required is that you are connected to the PC with the cable at all times and that you have [Developer Mode](https://bsmg.wiki/quest-modding.html#developer-mode) switched on. Once you have [downloaded the program from Meta's website](https://developer.oculus.com/downloads/package/oculus-developer-hub-win/), connect to the Quest via the PC with a cable. Then the app will initially give you a lot of options, all you need is streaming. Press the Cast button and then a new window will open where your entire quest will be streamed. If you look up there are a few ways you can change the image, select the Cinematic option. All open apps will then be closed and you will see a good stream on your PC. First, enable the audio option at the top if it is disabled. First, open Beat Saber and then you're ready to go!
+
+**Please be sure that the microphone is not being streamed!**
+
+
+
+
 
 ## Credits
 
