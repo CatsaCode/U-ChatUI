@@ -61,11 +61,11 @@
 #endif
 
 #ifdef TINYHTTP_JSON
-#  include <json.h>
+#  include "json.h"
 #endif
 
 #ifdef TINYHTTP_TEMPLATES
-#  include <HTMLTemplate.h>
+#  include "HTMLTemplate.h"
 #endif
 
 enum class HttpRequestMethod { GET,POST,PUT,DELETE,OPTIONS,UNKNOWN };
