@@ -2,7 +2,7 @@
 
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-
+#include "WebServer.hpp"
 #include "custom-types/shared/register.hpp"
 
 #include "TwitchIRC/TwitchIRCClient.hpp"
