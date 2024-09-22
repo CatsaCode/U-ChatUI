@@ -404,7 +404,6 @@ createFloatingBoxes();
 
             // Start the server on port 8080
             if (!server.listen("localhost", 8080)) {
-                PaperLogger.info("Error starting server!");
         } });
     }
 }
