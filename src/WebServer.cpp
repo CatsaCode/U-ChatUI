@@ -402,8 +402,9 @@ createFloatingBoxes();
     res.set_content(html, "text/html");
   });
 
-            // Start the server on port 8080
-            if (!server.listen("localhost", 8080)) {
+            // Start the server on port 4444
+            if (!server.listen("localhost", 4444)) {
+                //
         } });
     }
 }

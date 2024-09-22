@@ -112,6 +112,8 @@ void TwitchIRCThread() {
                         if (client.Login("justinfan" + std::to_string(1030307 + rand() % 1030307), "xxx")) {
                             wasConnected = true;
                             AddChatObject("<color=#9D9DA8>Established connection to <color=#0008FF>Twitch</color>");
+                            AddChatObject("<color=#9D9DA8>Welcome! You are using BETA <color=#0008FF>1.5</color>");
+                            AddChatObject("<color=#9D9DA8>Webserver found: via port <color=#0008FF>4444</color>");
                             INFO("Twitch Chat: Logged In!");
                             client.HookIRCCommand("PRIVMSG", OnChatMessage);
                             currentChannel = "";
@@ -176,7 +178,9 @@ MOD_EXPORT_FUNC void late_load() {
     custom_types::Register::AutoRegister();
     BSML::Init();
 
+
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
+    WebServer::start();
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
