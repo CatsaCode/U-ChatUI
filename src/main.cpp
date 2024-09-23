@@ -186,13 +186,6 @@ MOD_EXPORT_FUNC void late_load() {
     INFO("Starting ChatUI Webserver..");
     WebServer::start();
 
-    INFO("Starting ChatUI API Server..");
-    crow::App app;
-    Api api;
-    api.initRoutes(app);
-    app.port(8848).multithreaded().run();
-    return 0;
-
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
