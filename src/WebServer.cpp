@@ -6,7 +6,7 @@
 #include <thread>
 #include <filesystem>
 #include "main.hpp"
-#include "json/json.h"
+#include "json.hpp"
 
 
 namespace WebServer
@@ -411,17 +411,13 @@ createFloatingBoxes();
 
 
             server.Post("/data", [](const httplib::Request & req, httplib::Response &res) {
-    Json::Value jsonData;
-    Json::CharReaderBuilder reader;
-    std::string errors;
-
-    std::istringstream stream(req.body);
-    if (Json::parseFromStream(reader, stream, &jsonData, &errors)) {
-        std::string name = jsonData["name"].asString();
+    try {
+        auto jsonData = nlohmann::json::parse(req.body);
+        std::string name = jsonData["name"];
         res.set_content("Received name: " + name, "text/plain");
-    } else {
+    } catch (const std::exception& e) {
         res.status = 400;  // Bad request
-        res.set_content("Invalid JSON: " + errors, "text/plain");
+        res.set_content("Invalid JSON: " + std::string(e.what()), "text/plain");
     }
   });
 
