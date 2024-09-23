@@ -6,6 +6,8 @@
 #include <thread>
 #include <filesystem>
 #include "main.hpp"
+#include "json/json.h"
+
 
 namespace WebServer
 {
@@ -408,7 +410,7 @@ createFloatingBoxes();
   });
 
 
-            server.Post("/data", [](const httplib::Request & /*req*/, httplib::Response &res) {
+            server.Post("/data", [](const httplib::Request & req, httplib::Response &res) {
     Json::Value jsonData;
     Json::CharReaderBuilder reader;
     std::string errors;
