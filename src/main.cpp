@@ -2,7 +2,6 @@
 
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "WebServer.hpp"
 #include "custom-types/shared/register.hpp"
 
 #include "TwitchIRC/TwitchIRCClient.hpp"
@@ -21,6 +20,9 @@
 #include "logging.hpp"
 #include "ModConfig.hpp"
 #include "ModSettingsViewController.hpp"
+
+#include "WebServer.hpp"
+#include "api.hpp"
 
 #include <map>
 #include <thread>
@@ -180,7 +182,17 @@ MOD_EXPORT_FUNC void late_load() {
 
 
     BSML::Register::RegisterSettingsMenu("ChatUI", DidActivate, false);
+
+    INFO("Starting ChatUI Webserver..");
     WebServer::start();
+
+    INFO("Starting ChatUI API Server..");
+    crow::App app;
+    Api api;
+    api.initRoutes(app);
+    app.port(8848).multithreaded().run();
+    return 0;
+
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
     INFO("Installed all hooks!");
