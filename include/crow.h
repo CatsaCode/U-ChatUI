@@ -1056,10 +1056,10 @@ namespace sha1
 #ifndef ASIO_STANDALONE
 #define ASIO_STANDALONE
 #endif
-#include <asio.hpp>
-#include <asio/version.hpp>
+#include <boost/asio.hpp>
+#include <boost/asio/version.hpp>
 #ifdef CROW_ENABLE_SSL
-#include <asio/ssl.hpp>
+#include <boost/asio/ssl.hpp>
 #endif
 #endif
 
