@@ -402,6 +402,29 @@ createFloatingBoxes();
     res.set_content(html, "text/html");
   });
 
+
+            server.Get("/hello", [](const httplib::Request & /*req*/, httplib::Response &res) {
+    res.set_content("hello!", "text/plain");
+  });
+
+
+            server.Post("/data", [](const httplib::Request & /*req*/, httplib::Response &res) {
+    Json::Value jsonData;
+    Json::CharReaderBuilder reader;
+    std::string errors;
+
+    std::istringstream stream(req.body);
+    if (Json::parseFromStream(reader, stream, &jsonData, &errors)) {
+        std::string name = jsonData["name"].asString();
+        res.set_content("Received name: " + name, "text/plain");
+    } else {
+        res.status = 400;  // Bad request
+        res.set_content("Invalid JSON: " + errors, "text/plain");
+    }
+  });
+
+          
+
             // Start the server on port 4444
             if (!server.listen("localhost", 4444)) {
                 //
