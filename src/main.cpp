@@ -22,7 +22,6 @@
 #include "ModSettingsViewController.hpp"
 
 #include "WebServer.hpp"
-#include "api.hpp"
 
 #include <map>
 #include <thread>
