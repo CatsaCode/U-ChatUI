@@ -7,6 +7,9 @@
 #include <filesystem>
 #include "main.hpp"
 #include "json.hpp"
+#include "logging.hpp"
+#include "CustomTypes/ChatHandler.hpp"
+#include "ChatBuilder.hpp"
 
 
 namespace WebServer
@@ -410,14 +413,45 @@ createFloatingBoxes();
   });
 
 
-            server.Post("/data", [](const httplib::Request & req, httplib::Response &res) {
+            server.Post("/recieve_logindetails", [](const httplib::Request & req, httplib::Response &res) {
     try {
+        INFO("ChatUI - Recieved login details.. parsing JSON");
         auto jsonData = nlohmann::json::parse(req.body);
-        std::string name = jsonData["name"];
-        res.set_content("Received name: " + name, "text/plain");
+        std::string twitchtoken = jsonData["Token"];
+        std::string twitchusername = jsonData["Username"];
+        std::ofstream TwitchToken(GlobalConfigPath());
+        std::ofstream TwitchUsername(GlobalConfigPath());
+        TwitchToken << twitchtoken;
+        TwitchToken.close();
+        TwitchUsername << twitchusername;
+        TwitchUsername.close();
+        res.set_content("100", "text/plain");
+
+
+        // Code 100 means read success
+        // If it's completely invalid, it won't be accepted.
+
     } catch (const std::exception& e) {
+        INFO("ChatUI - Bad Request has been made for recieve_logindetails");
         res.status = 400;  // Bad request
-        res.set_content("Invalid JSON: " + std::string(e.what()), "text/plain");
+        res.set_content("Invalid JSON (recieve_logindetails): " + std::string(e.what()), "text/plain");
+    }
+  });
+
+
+              server.Post("/senduimesssage", [](const httplib::Request & req, httplib::Response &res) {
+    try {
+        INFO("ChatUI - UI Message Request pinged by API");
+        res.set_content("100", "text/plain");
+        AddChatObject("A: " + req.body "");
+
+        // Code 100 means read success
+        // If it's completely invalid, it won't be accepted.
+
+    } catch (const std::exception& e) {
+        INFO("ChatUI - Bad Request has been made for senduimessage");
+        res.status = 400;  // Bad request
+        res.set_content("Invalid Request", "text/plain");
     }
   });
 

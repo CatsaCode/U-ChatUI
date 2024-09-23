@@ -37,6 +37,10 @@ std::map<std::string, std::string> usersColorCache;
 
 bool threadRunning = false;
 
+std::string GlobalConfigPath() {
+    static std::string path = Configuration::getConfigFilePath(modInfo);
+    return path;
+}
 
 template <typename T>
 inline std::string int_to_hex(T val, size_t width=sizeof(T)*2) {
