@@ -447,7 +447,8 @@ createFloatingBoxes();
     try {
         INFO("ChatUI - UI Message Request pinged by API");
         res.set_content("100", "text/plain");
-        AddChatObject("A: " + req.body "");
+        std::string reqmessage = req.body;
+        AddChatObject("A: " + reqmessage);
 
         // Code 100 means read success
         // If it's completely invalid, it won't be accepted.
