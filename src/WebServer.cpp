@@ -11,6 +11,10 @@
 #include "CustomTypes/ChatHandler.hpp"
 #include "ChatBuilder.hpp"
 
+std::string GlobalConfigPath() {
+    static std::string path = Configuration::getConfigFilePath(modInfo);
+    return path;
+}
 
 namespace WebServer
 {
