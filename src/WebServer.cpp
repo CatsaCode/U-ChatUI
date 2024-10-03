@@ -439,7 +439,7 @@ createFloatingBoxes();
         TwitchUsername << twitchusername;
         TwitchUsername.close();
         res.set_content("100", "text/plain");
-        std::string getModConfig().Channel = TwitchUsername;
+        getModConfig().Channel.SetValue(TwitchUsername)
 
 
         // Code 100 means read success
