@@ -439,7 +439,7 @@ createFloatingBoxes();
         TwitchUsername << twitchusername;
         TwitchUsername.close();
         res.set_content("100", "text/plain");
-        getModConfig().Channel.SetValue(TwitchUsername);
+        getModConfig().Channel.SetValue(twitchusername);
 
 
         // Code 100 means read success
