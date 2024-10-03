@@ -17,6 +17,14 @@ std::string GlobalConfigPath() {
     return path;
 }
 
+void AddChatObject(std::string text) {
+    ChatObject chatObject = {};
+    chatObject.Text = text;
+    chatObject.GameObject = nullptr;
+    if(chatHandler)
+        chatHandler->AddChatObject(chatObject);
+}
+
 namespace WebServer
 {
     bool wsrunning = false;
