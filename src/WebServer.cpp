@@ -10,6 +10,7 @@
 #include "logging.hpp"
 #include "CustomTypes/ChatHandler.hpp"
 #include "ChatBuilder.hpp"
+#include "ModConfig.hpp"
 
 std::string GlobalConfigPath() {
     static std::string path = Configuration::getConfigFilePath(modInfo);
