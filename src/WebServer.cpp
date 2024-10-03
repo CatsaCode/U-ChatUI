@@ -17,14 +17,6 @@ std::string GlobalConfigPath() {
     return path;
 }
 
-void AddChatObject(std::string text) {
-    ChatObject chatObject = {};
-    chatObject.Text = text;
-    chatObject.GameObject = nullptr;
-    if(chatHandler)
-        chatHandler->AddChatObject(chatObject);
-}
-
 namespace WebServer
 {
     bool wsrunning = false;
@@ -458,7 +450,7 @@ createFloatingBoxes();
         INFO("ChatUI - UI Message Request pinged by API");
         res.set_content("100", "text/plain");
         std::string reqmessage = req.body;
-        AddChatObject("A: " + reqmessage);
+        //AddChatObject("A: " + reqmessage);
 
         // Code 100 means read success
         // If it's completely invalid, it won't be accepted.
