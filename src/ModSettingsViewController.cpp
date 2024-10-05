@@ -105,20 +105,24 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     auto generalTab = CreateLayout(mainContainer);
     auto panelTab = CreateLayout(mainContainer);
     auto emoteTab = CreateLayout(mainContainer);
+    auto websocketTab = CreateLayout(mainContainer);
     std::vector<GameObject*> tabs = {
         generalTab->gameObject,
         panelTab->gameObject,
-        emoteTab->gameObject
+        emoteTab->gameObject,
+        websocketTab->gameObject
     };
 
     // Create a tab selector to enable each tab
-    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emote Rain"}, 90.0f, [tabs](int selection){
+    std::function<void(int)> ShowTab = [tabs](int selection){
         // Disable all tabs
         for(int i = 0; i < tabs.size(); i++) tabs[i]->gameObject->SetActive(false);
         // Enable the selected tab
         tabs[selection]->gameObject->SetActive(true);
-    });
+    };
+    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emotes", "Websocket"}, 120.0f, ShowTab);
     tabsRow->transform->SetAsFirstSibling();
+    ShowTab(0);
 
 
 
@@ -190,6 +194,20 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
     // Disable the UI for the disabled settings
     chatEmoteRainToggle->set_interactable(false);
+
+
+
+    // Websocket tab
+
+    AddConfigValueToggle(websocketTab, getModConfig().WebsocketServer_Enabled);
+
+    // Currently disabled settings
+    BSML::Lite::CreateText(websocketTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f)); // Spacer
+    BSML::Lite::CreateText(websocketTab, "Coming Soon", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f))->horizontalAlignment = TMPro::HorizontalAlignmentOptions::Center;
+    auto websocketServerToggle = AddConfigValueToggle(websocketTab, getModConfig().WebsocketServer);
+
+    // Disable the UI for the disabled settings
+    websocketServerToggle->set_interactable(false);
 
 
 
