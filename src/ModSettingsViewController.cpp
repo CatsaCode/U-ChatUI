@@ -105,9 +105,6 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     auto generalTab = CreateLayout(mainContainer);
     auto panelTab = CreateLayout(mainContainer);
     auto emoteTab = CreateLayout(mainContainer);
-    // HighlightUIComponent(generalTab->gameObject, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    // HighlightUIComponent(panelTab->gameObject, Color(0.0f, 1.0f, 0.0f, 1.0f));
-    // HighlightUIComponent(emoteTab->gameObject, Color(0.0f, 0.0f, 1.0f, 1.0f));
     std::vector<GameObject*> tabs = {
         generalTab->gameObject,
         panelTab->gameObject,
@@ -127,8 +124,24 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
     // General tab
 
-    AddConfigValueInputString(generalTab, getModConfig().Channel);
-    AddConfigValueToggle(generalTab, getModConfig().SongOverlay_Enabled);
+    auto channelInput = AddConfigValueInputString(generalTab, getModConfig().Channel);
+    auto songOverlayEnabledToggle = AddConfigValueToggle(generalTab, getModConfig().SongOverlay_Enabled);
+    
+    // Currently disabled settings
+    BSML::Lite::CreateText(generalTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f)); // Spacer
+    BSML::Lite::CreateText(generalTab, "Coming Soon", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f))->horizontalAlignment = TMPro::HorizontalAlignmentOptions::Center;
+    auto youtubeChannelInput = AddConfigValueInputString(generalTab, getModConfig().Youtube_Channel);
+    auto chatToggle = AddConfigValueToggle(generalTab, getModConfig().Chat);
+    auto twitchYoutubeShowViewersToggle = AddConfigValueToggle(generalTab, getModConfig().TwitchYoutube_ShowViewers);
+    auto songOverlayToggle = AddConfigValueToggle(generalTab, getModConfig().SongOverlay);
+    auto chatIntegrationsToggle = AddConfigValueToggle(generalTab, getModConfig().ChatIntegrations);
+
+    // Disable the UI for the disabled settings
+    youtubeChannelInput->set_interactable(false);
+    chatToggle->set_interactable(false);
+    twitchYoutubeShowViewersToggle->set_interactable(false);
+    songOverlayToggle->set_interactable(false);
+    chatIntegrationsToggle->set_interactable(false);
 
 
 
@@ -157,8 +170,7 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     
     AddConfigValueIncrementVector2(panelTab, getModConfig().FontSizeChat, 1, 0.1f);
     AddConfigValueIncrementVector2(panelTab, getModConfig().BackGroundTransChat, 1, 0.1f);
-
-
+    
 
 
     // Emotes tab
@@ -170,6 +182,14 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_VIPCommand);
     AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_SUBCommand);
     AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_USERCommand);
+
+    // Currently disabled settings
+    BSML::Lite::CreateText(emoteTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f)); // Spacer
+    BSML::Lite::CreateText(emoteTab, "Coming Soon", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f))->horizontalAlignment = TMPro::HorizontalAlignmentOptions::Center;
+    auto chatEmoteRainToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain);
+
+    // Disable the UI for the disabled settings
+    chatEmoteRainToggle->set_interactable(false);
 
 
 
