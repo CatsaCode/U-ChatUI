@@ -1,6 +1,7 @@
 #include "ModSettingsViewController.hpp"
 
 #include "bsml/shared/BSML.hpp"
+#include "bsml/shared/BSML/Components/ExternalComponents.hpp"
 
 #include "HMUI/ViewController.hpp"
 #include "HMUI/Touchable.hpp"
@@ -124,30 +125,43 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
 
 
+    // General tab
 
     AddConfigValueInputString(generalTab, getModConfig().Channel);
     AddConfigValueToggle(generalTab, getModConfig().SongOverlay_Enabled);
 
 
 
-    auto panelTabRow = BSML::Lite::CreateHorizontalLayoutGroup(panelTab);
-    panelTabRow->childControlWidth = false;
-    panelTabRow->childForceExpandWidth = false;
-    panelTabRow->spacing = 15;
-    auto leftPanelTab = CreateLayout(panelTabRow);
-    auto rightPanelTab = CreateLayout(panelTabRow);
-    AddConfigValueIncrementVector3(leftPanelTab, getModConfig().PositionMenu, 2, 0.05f);
-    AddConfigValueIncrementVector3(leftPanelTab, getModConfig().RotationMenu, 0, 1.0f);
-    AddConfigValueIncrementVector2(leftPanelTab, getModConfig().SizeMenu, 0, 1.0f);
+    // Panel tab
 
-    AddConfigValueToggle(rightPanelTab, getModConfig().ForceGame);
+    // Popup window for adusting the panel transform in menu
+    BSML::ModalView* panelMenuPositionModal = BSML::Lite::CreateModal(self->transform, Vector2(0.0f, 5.0f), Vector2(80.0f, 66.0f), nullptr);
+    GameObject* panelMenuPositionModalContainer = BSML::Lite::CreateScrollableModalContainer(panelMenuPositionModal);
+    panelMenuPositionModalContainer->GetComponent<BSML::ExternalComponents*>()->Get<RectTransform*>()->set_anchoredPosition(Vector2(4.0f, 0.0f));
+    AddConfigValueIncrementVector3(panelMenuPositionModalContainer, getModConfig().PositionMenu, 2, 0.05f);
+    AddConfigValueIncrementVector3(panelMenuPositionModalContainer, getModConfig().RotationMenu, 0, 1.0f);
+    AddConfigValueIncrementVector2(panelMenuPositionModalContainer, getModConfig().SizeMenu, 0, 1.0f);
+    
+    // Popup window for adusting the panel transform in game
+    BSML::ModalView* panelGamePositionModal = BSML::Lite::CreateModal(self->transform, Vector2(0.0f, 5.0f), Vector2(80.0f, 66.0f), [](){getModConfig().ForceGame.SetValue(false);});
+    GameObject* panelGamePositionModalContainer = BSML::Lite::CreateScrollableModalContainer(panelGamePositionModal);
+    panelGamePositionModalContainer->GetComponent<BSML::ExternalComponents*>()->Get<RectTransform*>()->set_anchoredPosition(Vector2(4.0f, 0.0f));
+    AddConfigValueIncrementVector3(panelGamePositionModalContainer, getModConfig().PositionGame, 2, 0.05f);
+    AddConfigValueIncrementVector3(panelGamePositionModalContainer, getModConfig().RotationGame, 0, 1.0f);
+    AddConfigValueIncrementVector2(panelGamePositionModalContainer, getModConfig().SizeGame, 0, 1.0f);
 
-    AddConfigValueIncrementVector3(rightPanelTab, getModConfig().PositionGame, 2, 0.05f);
-    AddConfigValueIncrementVector3(rightPanelTab, getModConfig().RotationGame, 0, 1.0f);
-    AddConfigValueIncrementVector2(rightPanelTab, getModConfig().SizeGame, 0, 1.0f);
+    // Buttons for opening the panel transform modals
+    auto panelPositionButtonRow = BSML::Lite::CreateHorizontalLayoutGroup(panelTab);
+    auto panelMenuPositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Menu Position", [panelMenuPositionModal](){panelMenuPositionModal->Show();});
+    auto panelGamePositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Game Position", [panelGamePositionModal](){panelGamePositionModal->Show(); getModConfig().ForceGame.SetValue(true);});
+    
+    AddConfigValueIncrementVector2(panelTab, getModConfig().FontSizeChat, 1, 0.1f);
+    AddConfigValueIncrementVector2(panelTab, getModConfig().BackGroundTransChat, 1, 0.1f);
 
 
 
+
+    // Emotes tab
 
     AddConfigValueIncrementFloat(emoteTab, getModConfig().ChatEmoteRain_MaxEmoteCount, 0, 5.0f, 0.0f, 100.0f);
     AddConfigValueIncrementVector2(emoteTab, getModConfig().ChatEmoteRain_EmoteSize, 1, 0.1f);
