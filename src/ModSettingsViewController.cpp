@@ -105,12 +105,14 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     auto generalTab = CreateLayout(mainContainer);
     auto panelTab = CreateLayout(mainContainer);
     auto emoteTab = CreateLayout(mainContainer);
-    auto websocketTab = CreateLayout(mainContainer);
+    auto apiTab = CreateLayout(mainContainer);
+    auto creditsTab = CreateLayout(mainContainer);
     std::vector<GameObject*> tabs = {
         generalTab->gameObject,
         panelTab->gameObject,
         emoteTab->gameObject,
-        websocketTab->gameObject
+        apiTab->gameObject,
+        creditsTab->gameObject
     };
 
     // Create a tab selector to enable each tab
@@ -120,7 +122,7 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
         // Enable the selected tab
         tabs[selection]->gameObject->SetActive(true);
     };
-    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emotes", "Websocket"}, 120.0f, ShowTab);
+    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emotes", "API", "Credits"}, 120.0f, ShowTab);
     tabsRow->transform->SetAsFirstSibling();
     ShowTab(0);
 
@@ -179,67 +181,43 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
     // Emotes tab
 
-    AddConfigValueIncrementFloat(emoteTab, getModConfig().ChatEmoteRain_MaxEmoteCount, 0, 5.0f, 0.0f, 100.0f);
-    AddConfigValueIncrementVector2(emoteTab, getModConfig().ChatEmoteRain_EmoteSize, 1, 0.1f);
-    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_ActivateCommand);
-    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_MODCommand);
-    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_VIPCommand);
-    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_SUBCommand);
-    AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_USERCommand);
+    // Move settings here once implemented
 
     // Currently disabled settings
-    BSML::Lite::CreateText(emoteTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f)); // Spacer
     BSML::Lite::CreateText(emoteTab, "Coming Soon", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f))->horizontalAlignment = TMPro::HorizontalAlignmentOptions::Center;
     auto chatEmoteRainToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain);
+    auto chatEmoteRainMaxEmoteCountIncrement = AddConfigValueIncrementFloat(emoteTab, getModConfig().ChatEmoteRain_MaxEmoteCount, 0, 5.0f, 0.0f, 100.0f);
+    auto chatEmoteRainEmoteSizeIncrement = AddConfigValueIncrementVector2(emoteTab, getModConfig().ChatEmoteRain_EmoteSize, 1, 0.1f);
+    auto chatEmoteRainActivateCommandToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_ActivateCommand);
+    auto chatEmoteRainModCommandToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_MODCommand);
+    auto chatEmoteRainVipCommandToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_VIPCommand);
+    auto chatEmoteRainSubCommandToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_SUBCommand);
+    auto chatEmoteRainUserCommandToggle = AddConfigValueToggle(emoteTab, getModConfig().ChatEmoteRain_USERCommand);
 
     // Disable the UI for the disabled settings
     chatEmoteRainToggle->set_interactable(false);
+    chatEmoteRainMaxEmoteCountIncrement->set_interactable(false);
+    chatEmoteRainEmoteSizeIncrement[0]->set_interactable(false);
+    chatEmoteRainEmoteSizeIncrement[1]->set_interactable(false);
+    chatEmoteRainActivateCommandToggle->set_interactable(false);
+    chatEmoteRainModCommandToggle->set_interactable(false);
+    chatEmoteRainVipCommandToggle->set_interactable(false);
+    chatEmoteRainSubCommandToggle->set_interactable(false);
+    chatEmoteRainUserCommandToggle->set_interactable(false);
 
-
-
-    // Websocket tab
-
-    AddConfigValueToggle(websocketTab, getModConfig().WebsocketServer_Enabled);
-
-    // Currently disabled settings
-    BSML::Lite::CreateText(websocketTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f)); // Spacer
-    BSML::Lite::CreateText(websocketTab, "Coming Soon", Vector2(0.0f, 0.0f), Vector2(1.0f, 5.0f))->horizontalAlignment = TMPro::HorizontalAlignmentOptions::Center;
-    auto websocketServerToggle = AddConfigValueToggle(websocketTab, getModConfig().WebsocketServer);
-
-    // Disable the UI for the disabled settings
-    websocketServerToggle->set_interactable(false);
-
-
-
-
-    // // self->get_gameObject()->AddComponent<Touchable*>();
-
-    // GameObject* container = BSML::Lite::CreateScrollableSettingsContainer(self->get_transform());
-    // Transform* parent = container->get_transform();
-
-    // auto layout = BSML::Lite::CreateHorizontalLayoutGroup(parent);
-    // // layout->GetComponent<LayoutElement*>()->set_preferredWidth(50.0f);
-    // // layout->set_childControlWidth(true);
-    // auto layoutParent = layout->get_transform();
     
-    // auto stringSetting = AddConfigValueInputString(layoutParent, getModConfig().Channel);
 
-    // //Use underline from button because text doesn't work somehow with this width
-    // auto underscoreButton = BSML::Lite::CreateUIButton(layoutParent, "", UnityEngine::Vector2(0.0f, 0.0f), UnityEngine::Vector2(4.0f, 8.0f), [stringSetting] {
-    //     stringSetting->KeyboardKeyPressed('_');
-    //     stringSetting->UpdateClearButton();
-    // });
-    // BSML::Lite::AddHoverHint(underscoreButton->get_gameObject(), "Adds a underscore");
-    // // LayoutElement* layoutElement = underscoreButton->GetComponent<LayoutElement*>();
-    // // layoutElement->set_minWidth(4.0f);
+    // API tab
 
-    // AddConfigValueIncrementVector3(parent, getModConfig().PositionMenu, 2, 0.05f);
-    // AddConfigValueIncrementVector3(parent, getModConfig().RotationMenu, 0, 1.0f);
-    // AddConfigValueIncrementVector2(parent, getModConfig().SizeMenu, 0, 1.0f);
+    AddConfigValueToggle(apiTab, getModConfig().WebsocketServer_Enabled);
+    AddConfigValueToggle(apiTab, getModConfig().WebsocketServer);
 
-    // AddConfigValueToggle(parent, getModConfig().ForceGame);
 
-    // AddConfigValueIncrementVector3(parent, getModConfig().PositionGame, 2, 0.05f);
-    // AddConfigValueIncrementVector3(parent, getModConfig().RotationGame, 0, 1.0f);
-    // AddConfigValueIncrementVector2(parent, getModConfig().SizeGame, 0, 1.0f);
+
+    // Credits tab
+    BSML::Lite::CreateText(creditsTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f)); // Spacer
+    BSML::Lite::CreateText(creditsTab, "vcmikuu", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
+    BSML::Lite::CreateText(creditsTab, "FrozenAlex", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
+    BSML::Lite::CreateText(creditsTab, "DanTheMan827", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
+    BSML::Lite::CreateText(creditsTab, "CatsaCode", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
 }
