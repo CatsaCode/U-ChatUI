@@ -4,20 +4,16 @@
 #include "bsml/shared/BSML/Components/ExternalComponents.hpp"
 
 #include "HMUI/ViewController.hpp"
-#include "HMUI/Touchable.hpp"
+#include "HMUI/TextSegmentedControl.hpp"
 
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/Vector2.hpp"
-#include "UnityEngine/Vector3.hpp"
 #include "UnityEngine/Component.hpp"
-#include "UnityEngine/Color.hpp"
 #include "UnityEngine/RectTransform.hpp"
 #include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
 #include "UnityEngine/UI/ContentSizeFitter.hpp"
 #include "UnityEngine/UI/Image.hpp"
-
-#include "System/Type.hpp"
 
 #include "logging.hpp"
 #include "ModConfig.hpp"
@@ -27,69 +23,15 @@ using namespace UnityEngine;
 using namespace UnityEngine::UI;
 using namespace HMUI;
 
-void InfoTree(GameObject* object) {
-    std::vector<GameObject*> remainingObjects = {object};
-
-    while(!remainingObjects.empty()) {
-        GameObject* object = remainingObjects[0];
-
-        int parentCount = 0;
-        Transform* tmpTransform = object->transform;
-        while(tmpTransform != nullptr) {
-            tmpTransform = tmpTransform->parent;
-            parentCount++;
-        }
-
-        INFO("{}G: {}", std::string(' ', parentCount * 2), object->name);
-
-        ArrayW<Component*> components = object->GetComponents<Component*>();
-        for(int i = 0; i < components->get_Length(); i++) {
-            INFO("{}C: {}", std::string(' ', parentCount * 2 + 1), components[i]->GetType()->ToString());
-        }
-
-        for(int i = 0; i < object->transform->childCount; i++) remainingObjects.push_back(object->transform->GetChild(i)->gameObject);
-        remainingObjects.erase(remainingObjects.begin());
-    }
-    // ArrayW<Component*> components = object->GetComponents<Component*>();
-    // object->transform->childCount;
-    // INFO("G: {}", object->name);
-    // for(int i = 0; i < components->get_Length(); i++) {
-    //     INFO("C: {}", components[i]->GetType()->ToString());
-    // }
-}
-
-void HighlightUIComponent(GameObject* object, Color color = Color(1.0f, 1.0f, 1.0f, 1.0f)) {
-    auto image = object->AddComponent<Image*>();
-    image->color = color;
-}
-
-UI::VerticalLayoutGroup* CreateLayout(const BSML::Lite::TransformWrapper& parent) {
+// Create a VerticalLayoutGroup that doesn't try to equally space children
+UI::VerticalLayoutGroup* CreateVerticalList(const BSML::Lite::TransformWrapper& parent) {
     // Crate component that will space other components vertically
     auto verticalLayout = BSML::Lite::CreateVerticalLayoutGroup(parent);
-    // Place components one on top of the other. Don't try to space them out evenly
+    // Place components one on top of the other; don't try to space them out evenly
     verticalLayout->childControlHeight = false;
     verticalLayout->childForceExpandHeight = false;
 
     return verticalLayout;
-}
-
-// Create a row of buttons directly side by side 
-HorizontalLayoutGroup* CreateTabSelector(const BSML::Lite::TransformWrapper& parent, std::vector<std::string> labels, float width, std::function<void(int)> selectionFunc) {
-    // Create a horizontal layout to automatically space out each tab button
-    auto tabsRow = BSML::Lite::CreateHorizontalLayoutGroup(parent);
-    // Set tabsRow to be a specific width
-    tabsRow->GetComponent<ContentSizeFitter*>()->horizontalFit = ContentSizeFitter::FitMode::PreferredSize;
-    tabsRow->GetComponent<LayoutElement*>()->preferredWidth = width;
-
-    // Create a tab for each label
-    for(int i = 0; i < labels.size(); i++) {
-        // Create a button that will call selectionFunc with its index
-        auto tabButton = BSML::Lite::CreateUIButton(tabsRow, labels[i], [selectionFunc, i](){if(selectionFunc != nullptr) selectionFunc(i);});
-        // Make each button fill space evenly
-        tabButton->GetComponent<ContentSizeFitter*>()->horizontalFit = ContentSizeFitter::FitMode::Unconstrained;
-    }
-
-    return tabsRow;
 }
 
 void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
@@ -97,16 +39,14 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     if(!firstActivation) return;
 
     // Container for the entire mod menu  
-    auto mainContainer = CreateLayout(self->transform);
-    // mainContainer->spacing = 1.0f; // ?
-    // HighlightUIComponent(mainContainer->gameObject, Color(0.5f, 0.5f, 0.5f, 1.0f));
+    auto mainContainer = CreateVerticalList(self->transform);
 
     // Pre-create each tab GameObject so they can be referenced in tabsRow
-    auto generalTab = CreateLayout(mainContainer);
-    auto panelTab = CreateLayout(mainContainer);
-    auto emoteTab = CreateLayout(mainContainer);
-    auto apiTab = CreateLayout(mainContainer);
-    auto creditsTab = CreateLayout(mainContainer);
+    auto generalTab = CreateVerticalList(mainContainer);
+    auto panelTab = CreateVerticalList(mainContainer);
+    auto emoteTab = CreateVerticalList(mainContainer);
+    auto apiTab = CreateVerticalList(mainContainer);
+    auto creditsTab = CreateVerticalList(mainContainer);
     std::vector<GameObject*> tabs = {
         generalTab->gameObject,
         panelTab->gameObject,
@@ -122,10 +62,17 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
         // Enable the selected tab
         tabs[selection]->gameObject->SetActive(true);
     };
-    auto tabsRow = CreateTabSelector(mainContainer, {"General", "Panel", "Emotes", "API", "Credits"}, 120.0f, ShowTab);
+    std::string_view tabLabels[] = {"General", "Panel", "Emotes", "API", "Credits"};
+    auto tabsRow = BSML::Lite::CreateTextSegmentedControl(mainContainer, Vector2(0.0f, 0.0f), Vector2(120.0f, 7.0f), std::span<std::string_view>(tabLabels), ShowTab);
+    tabsRow->_hideCellBackground = false;
+    tabsRow->_fontSize = 4;
+    tabsRow->ReloadData();
+    tabsRow->gameObject->AddComponent<LayoutElement*>()->preferredWidth = 120.0f;
+    // Make sure that the tab selector appears above the tab panels themselves
     tabsRow->transform->SetAsFirstSibling();
+    // Hide all tabs but the general tab
     ShowTab(0);
-
+    
 
 
     // General tab
@@ -173,7 +120,13 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     auto panelPositionButtonRow = BSML::Lite::CreateHorizontalLayoutGroup(panelTab);
     auto panelMenuPositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Menu Position", [panelMenuPositionModal](){panelMenuPositionModal->Show();});
     auto panelGamePositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Game Position", [panelGamePositionModal](){panelGamePositionModal->Show(); getModConfig().ForceGame.SetValue(true);});
-    
+    // TODO This row will appear out of place until the pointer touches it... Seems SetDirty will only work when the object is enabled??
+    // panelPositionButtonRow->SetDirty();
+    // panelPositionButtonRow->GetComponent<LayoutElement*>()->preferredHeight = 7.74;
+    // panelPositionButtonRow->GetComponent<ContentSizeFitter*>()->SetDirty();
+    // panelPositionButtonRow->GetComponent<LayoutElement*>()->SetDirty();
+    // panelPositionButtonRow->SetDirty();
+
     AddConfigValueIncrementVector2(panelTab, getModConfig().FontSizeChat, 1, 0.1f);
     AddConfigValueIncrementVector2(panelTab, getModConfig().BackGroundTransChat, 1, 0.1f);
     
@@ -215,7 +168,8 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
 
 
     // Credits tab
-    BSML::Lite::CreateText(creditsTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f)); // Spacer
+    BSML::Lite::CreateText(creditsTab, "", Vector2(0.0f, 0.0f), Vector2(1.0f, 7.0f)); // Spacer
+    BSML::Lite::CreateText(creditsTab, "darknight1050", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
     BSML::Lite::CreateText(creditsTab, "vcmikuu", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
     BSML::Lite::CreateText(creditsTab, "FrozenAlex", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
     BSML::Lite::CreateText(creditsTab, "DanTheMan827", Vector2(0.0f, 0.0f), Vector2(1.0f, 10.0f))->fontSize = 8.0f;
