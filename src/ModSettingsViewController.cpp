@@ -2,6 +2,7 @@
 
 #include "bsml/shared/BSML.hpp"
 #include "bsml/shared/BSML/Components/ExternalComponents.hpp"
+#include "bsml/shared/BSML/MainThreadScheduler.hpp"
 
 #include "HMUI/ViewController.hpp"
 #include "HMUI/TextSegmentedControl.hpp"
@@ -14,6 +15,7 @@
 #include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
 #include "UnityEngine/UI/ContentSizeFitter.hpp"
 #include "UnityEngine/UI/Image.hpp"
+#include "UnityEngine/UI/Selectable.hpp"
 
 #include "logging.hpp"
 #include "ModConfig.hpp"
@@ -64,14 +66,15 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     };
     std::string_view tabLabels[] = {"General", "Panel", "Emotes", "API", "Credits"};
     auto tabsRow = BSML::Lite::CreateTextSegmentedControl(mainContainer, Vector2(0.0f, 0.0f), Vector2(120.0f, 7.0f), std::span<std::string_view>(tabLabels), ShowTab);
+    // Adust a few settings for the BSML Lite TextSegmentedControl prefab to appear like standard tabs
     tabsRow->_hideCellBackground = false;
     tabsRow->_fontSize = 4;
     tabsRow->ReloadData();
     tabsRow->gameObject->AddComponent<LayoutElement*>()->preferredWidth = 120.0f;
     // Make sure that the tab selector appears above the tab panels themselves
     tabsRow->transform->SetAsFirstSibling();
-    // Hide all tabs but the general tab
-    ShowTab(0);
+    // Hide all tabs but the general tab. Wait a slight delay to give time for panelPositionButtonRow to update its height properly
+    BSML::MainThreadScheduler::ScheduleAfterTime(0.15f, [ShowTab](){ShowTab(0);});
     
 
 
@@ -120,13 +123,7 @@ void DidActivate(ViewController* self, bool firstActivation, bool addedToHierarc
     auto panelPositionButtonRow = BSML::Lite::CreateHorizontalLayoutGroup(panelTab);
     auto panelMenuPositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Menu Position", [panelMenuPositionModal](){panelMenuPositionModal->Show();});
     auto panelGamePositionModalButton = BSML::Lite::CreateUIButton(panelPositionButtonRow, "Game Position", [panelGamePositionModal](){panelGamePositionModal->Show(); getModConfig().ForceGame.SetValue(true);});
-    // TODO This row will appear out of place until the pointer touches it... Seems SetDirty will only work when the object is enabled??
-    // panelPositionButtonRow->SetDirty();
-    // panelPositionButtonRow->GetComponent<LayoutElement*>()->preferredHeight = 7.74;
-    // panelPositionButtonRow->GetComponent<ContentSizeFitter*>()->SetDirty();
-    // panelPositionButtonRow->GetComponent<LayoutElement*>()->SetDirty();
-    // panelPositionButtonRow->SetDirty();
-
+    
     AddConfigValueIncrementVector2(panelTab, getModConfig().FontSizeChat, 1, 0.1f);
     AddConfigValueIncrementVector2(panelTab, getModConfig().BackGroundTransChat, 1, 0.1f);
     
