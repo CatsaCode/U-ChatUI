@@ -25,7 +25,11 @@ DECLARE_CONFIG(ModConfig,
 
     // Not for V2 Update
 
-    CONFIG_VALUE(Youtube_Channel, std::string, "Youtube Channel", "Youtube");
+
+    CONFIG_VALUE(Youtube_Channel, std::string, "Youtube Channel", "");
+
+
+
     CONFIG_VALUE(TwitchYoutube_ShowViewers, bool, "Show current viewers", false);
 
     // Values for V3 Update

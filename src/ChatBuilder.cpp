@@ -32,8 +32,8 @@ void CreateChatGameObject() {
     chatHandler = chatGameObject->AddComponent<ChatUI::ChatHandler*>();
     chatGameObject->AddComponent<RectMask2D*>();
     auto backgroundable = chatGameObject->AddComponent<Backgroundable*>();
-    backgroundable->ApplyBackground("round-rect-panel");
-    backgroundable->ApplyAlpha(0.75f);
+    backgroundable->ApplyBackground("panel");
+    backgroundable->ApplyAlpha(0.50f);
     RectTransform* transform = chatGameObject->GetComponent<RectTransform*>();
 
     VerticalLayoutGroup* layout = BSML::Lite::CreateVerticalLayoutGroup(transform);
