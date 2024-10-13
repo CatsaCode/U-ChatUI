@@ -45,6 +45,11 @@ std::map<std::string, std::string> usersColorCache;
 
 bool threadRunning = false;
 
+using namespace BSML;
+using namespace UnityEngine;
+using namespace UnityEngine::UI;
+using namespace HMUI;
+using namespace TMPro;
 
 template <typename T>
 inline std::string int_to_hex(T val, size_t width=sizeof(T)*2) {
