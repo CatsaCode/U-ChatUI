@@ -157,7 +157,7 @@ MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace:
     if (firstActivation)
     {
         UnityEngine::Vector2 sizeDelta = {20, 20};
-        button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", {20, -20}, sizeDelta);
+        Button* button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", {20, -20}, sizeDelta);
         UnityEngine::Object::DestroyImmediate(button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>());
         UnityEngine::UI::LayoutElement* layoutElement = button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
         if(!layoutElement)
