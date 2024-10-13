@@ -155,39 +155,56 @@ void TwitchIRCThread() {
 
 // thanks randomsongpicker that i can learn how to place a button in the menu
 // kiss kiss from me
+//MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+//{
+//    LevelSelectionNavigationControllerDidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
+//
+//    if (firstActivation)
+//    {
+//        UnityEngine::Vector2 sizeDelta = {20, 20};
+//        Button* button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", {20, -20}, sizeDelta);
+//        UnityEngine::Object::DestroyImmediate(button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>());
+//        UnityEngine::UI::LayoutElement* layoutElement = button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
+//        if(!layoutElement)
+//            layoutElement = button->get_gameObject()->AddComponent<UnityEngine::UI::LayoutElement*>();
+//        layoutElement->set_minWidth(sizeDelta.x);
+//        layoutElement->set_minHeight(sizeDelta.y);
+//        layoutElement->set_preferredWidth(sizeDelta.x);
+//        layoutElement->set_preferredHeight(sizeDelta.y);
+//        layoutElement->set_flexibleWidth(sizeDelta.x);
+//        layoutElement->set_flexibleHeight(sizeDelta.y);
+//
+//        return;
+//    }
+//
+//    if(Button) 
+//    {
+//        Button->get_gameObject()->SetActive(true);
+//        // If the button has been clicked / active
+//    }
+//    else
+//    {
+        // Button null
+//    }
+//}
+
+
+
 MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 {
     LevelSelectionNavigationControllerDidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
 
     if (firstActivation)
     {
-        UnityEngine::Vector2 sizeDelta = {20, 20};
-        Button* button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", {20, -20}, sizeDelta);
-        UnityEngine::Object::DestroyImmediate(button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>());
-        UnityEngine::UI::LayoutElement* layoutElement = button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
-        if(!layoutElement)
-            layoutElement = button->get_gameObject()->AddComponent<UnityEngine::UI::LayoutElement*>();
-        layoutElement->set_minWidth(sizeDelta.x);
-        layoutElement->set_minHeight(sizeDelta.y);
-        layoutElement->set_preferredWidth(sizeDelta.x);
-        layoutElement->set_preferredHeight(sizeDelta.y);
-        layoutElement->set_flexibleWidth(sizeDelta.x);
-        layoutElement->set_flexibleHeight(sizeDelta.y);
+        UnityEngine::UI::HorizontalLayoutGroup* layout = BSML::Lite::CreateHorizontalLayoutGroup(layout->get_transform());
+        Button* button = BSML::Lite::CreateUIButton(layout->get_transform(), "", "Chat Requests", nullptr);
+        button->get_transform()->set_localScale({2.0f, 3.0f, 2.0f});
+        button->set_interactable(false);
 
         return;
     }
 
-    if(Button) 
-    {
-        Button->get_gameObject()->SetActive(true);
-        // If the button has been clicked / active
-    }
-    else
-    {
-        // Button null
-    }
 }
-
 
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
                 &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,

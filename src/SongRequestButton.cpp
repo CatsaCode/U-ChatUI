@@ -21,11 +21,11 @@ using namespace TMPro;
 
 // this is only for the song request button
 
-//void CreateSongRequestButton() {
-//    UnityEngine::UI::HorizontalLayoutGroup* layout = BSML::Lite::CreateHorizontalLayoutGroup(layout->get_transform());
-//    Button* button = BSML::Lite::CreateUIButton(layout->get_transform(), "", "Chat Requests", nullptr);
-//    button->get_transform()->set_localScale({2.0f, 3.0f, 2.0f});
-//    button->set_interactable(false);
-//
-//
-//}
+void CreateSongRequestButton() {
+    UnityEngine::UI::HorizontalLayoutGroup* layout = BSML::Lite::CreateHorizontalLayoutGroup(layout->get_transform());
+    Button* button = BSML::Lite::CreateUIButton(layout->get_transform(), "", "Chat Requests", nullptr);
+    button->get_transform()->set_localScale({2.0f, 3.0f, 2.0f});
+    button->set_interactable(false);
+
+
+}
