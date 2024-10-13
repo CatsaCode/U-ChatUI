@@ -177,9 +177,9 @@ MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace:
         return;
     }
 
-    if(button) 
+    if(Button) 
     {
-        button->get_gameObject()->SetActive(true);
+        Button->get_gameObject()->SetActive(true);
         // If the button has been clicked / active
     }
     else
