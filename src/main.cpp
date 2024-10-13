@@ -140,6 +140,42 @@ void TwitchIRCThread() {
     INFO("Thread Stopped!");
 }
 
+// thanks randomsongpicker that i can learn how to place a button in the menu
+// kiss kiss from me
+MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+{
+    LevelSelectionNavigationControllerDidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
+
+    if (firstActivation)
+    {
+        UnityEngine::Vector2 sizeDelta = {20, 20};
+        button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", {20, -20}, sizeDelta);
+        UnityEngine::Object::DestroyImmediate(button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>());
+        UnityEngine::UI::LayoutElement* layoutElement = button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
+        if(!layoutElement)
+            layoutElement = button->get_gameObject()->AddComponent<UnityEngine::UI::LayoutElement*>();
+        layoutElement->set_minWidth(sizeDelta.x);
+        layoutElement->set_minHeight(sizeDelta.y);
+        layoutElement->set_preferredWidth(sizeDelta.x);
+        layoutElement->set_preferredHeight(sizeDelta.y);
+        layoutElement->set_flexibleWidth(sizeDelta.x);
+        layoutElement->set_flexibleHeight(sizeDelta.y);
+
+        return;
+    }
+
+    if(button) 
+    {
+        button->get_gameObject()->SetActive(true);
+        // If the button has been clicked / active
+    }
+    else
+    {
+        // Button null
+    }
+}
+
+
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged,
                 &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,
                 void, UnityEngine::SceneManagement::Scene prevScene, UnityEngine::SceneManagement::Scene nextScene) {
@@ -196,6 +232,7 @@ MOD_EXPORT_FUNC void late_load() {
 
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
+    INSTALL_HOOK(Logger, LevelSelectionNavigationControllerDidActivate);
     INFO("Installed all hooks!");
 }
 #pragma endregion
