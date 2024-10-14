@@ -196,8 +196,11 @@ MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivateSongRequestButton, 
 
     if (firstActivation)
     {
-        UnityEngine::UI::HorizontalLayoutGroup* layout = BSML::Lite::CreateHorizontalLayoutGroup(self->get_transform());
-        Button* button = BSML::Lite::CreateUIButton(layout->get_transform(), "", "Chat Requests", nullptr);
+        Button* button = BSML::Lite::CreateUIButton(self->get_transform(), "", "Chat Requests", nullptr);
+        UnityEngine::Object::DestroyImmediate(button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>());
+        UnityEngine::UI::LayoutElement* layoutElement = button->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
+        if(!layoutElement)
+            layoutElement = button->get_gameObject()->AddComponent<UnityEngine::UI::LayoutElement*>();
         button->get_transform()->set_localScale({2.0f, 3.0f, 2.0f});
         button->set_interactable(false);
 
