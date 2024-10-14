@@ -192,7 +192,7 @@ void TwitchIRCThread() {
 
 MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivateSongRequestButton, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 {
-    LevelSelectionNavigationControllerDidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
+    LevelSelectionNavigationControllerDidActivateSongRequestButton(self, firstActivation, addedToHierarchy, screenSystemEnabling);
 
     if (firstActivation)
     {
