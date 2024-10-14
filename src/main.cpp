@@ -190,7 +190,7 @@ void TwitchIRCThread() {
 
 
 
-MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivate, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+MAKE_HOOK_MATCH(LevelSelectionNavigationControllerDidActivateSongRequestButton, &GlobalNamespace::LevelSelectionNavigationController::DidActivate, void, GlobalNamespace::LevelSelectionNavigationController *self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 {
     LevelSelectionNavigationControllerDidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
 
@@ -262,7 +262,7 @@ MOD_EXPORT_FUNC void late_load() {
 
     INFO("Installing hooks...");
     INSTALL_HOOK(Logger, SceneManager_Internal_ActiveSceneChanged);
-    INSTALL_HOOK(Logger, LevelSelectionNavigationControllerDidActivate);
+    INSTALL_HOOK(Logger, LevelSelectionNavigationControllerDidActivateSongRequestButton);
     INFO("Installed all hooks!");
 }
 #pragma endregion
